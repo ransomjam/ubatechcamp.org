@@ -1,30 +1,32 @@
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
+const cors = require('cors');
 const axios = require('axios');
 const app = express();
 const port = process.env.PORT || 4001;
 
-// Manual CORS middleware
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  // Allow localhost:8080 and other common dev origins
-  if (origin && (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  } else {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization,x-admin-key');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  next();
-});
+// CORS configuration
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:8080',
+  'https://www.ubatechcamp.org',
+  'https://ubatechcamp.org'
+];
 
-app.use(bodyParser.json());
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
+
+app.use(express.json());
 
 const FAPSHI_BASE = process.env.FAPSHI_BASE_URL || 'https://sandbox.fapshi.com';
 const FAPSHI_HEADERS = {
