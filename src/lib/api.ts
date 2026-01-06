@@ -1,6 +1,6 @@
 // src/lib/api.ts
 export const API_BASE =
-  (import.meta.env.VITE_API_BASE_URL || "http://localhost:8080").trim();
+  (import.meta.env.VITE_API_BASE_URL || "https://www.ubatechcamp.org").trim();
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
@@ -196,8 +196,11 @@ export const api = {
     amount_cents: number;
     currency: string; // e.g. "XAF"
     phone?: string;
+    email?: string;
   }) => {
-    const res = await fetch(`${API_BASE}/api/payments/fapshi`, {
+    // Ensure API_BASE doesn't have a trailing slash and path starts with /api
+    const baseUrl = API_BASE.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/payments/fapshi`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

@@ -50,8 +50,6 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       )}
 
       <picture>
-        {/* Support for WebP if user has converted images */}
-        <source srcSet={src.replace(/\.(png|jpg|jpeg)$/, '.webp')} type="image/webp" />
         <img
           src={isSlow && lowResSrc ? lowResSrc : src}
           alt={alt}

@@ -17,22 +17,41 @@ app.use(cors({
   origin: function (origin, callback) {
     // allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
+    
+    const isAllowed = allowedOrigins.some(ao => origin.includes(ao.replace('https://', '').replace('http://', '')));
+    
+    if (isAllowed) {
+      return callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
     }
-    return callback(null, true);
   },
   credentials: true
 }));
 
 app.use(express.json());
 
+// DEBUG LOGGING: This will show in Render logs
+app.use((req, res, next) => {
+  console.log(`Incoming Request: ${req.method} ${req.path}`);
+  next();
+});
+
 const FAPSHI_BASE = process.env.FAPSHI_BASE_URL || 'https://sandbox.fapshi.com';
 const FAPSHI_HEADERS = {
-  apiuser: process.env.FAPSHI_APIUSER || 'c02a978a-5e79-4b8e-9906-32847acaacc5',
-  apikey: process.env.FAPSHI_APIKEY || 'FAK_TEST_c90f693f3811bd439900'
+  apiuser: process.env.FAPSHI_APIUSER,
+  apikey: process.env.FAPSHI_APIKEY
 };
+
+// Log configuration status on startup
+console.log('--- Configuration Status ---');
+console.log('FAPSHI_BASE_URL:', FAPSHI_BASE);
+console.log('FAPSHI_APIUSER:', FAPSHI_HEADERS.apiuser ? 'Set' : 'MISSING (Payment will fail)');
+console.log('FAPSHI_APIKEY:', FAPSHI_HEADERS.apikey ? 'Set' : 'MISSING (Payment will fail)');
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL || 'http://localhost:5173 (Default)');
+console.log('---------------------------');
 
 const payments = new Map();
 const supabase = require('./supabase');
@@ -186,21 +205,25 @@ app.post('/api/registrations', async (req, res) => {
 
 app.post('/api/payments/fapshi', async (req, res) => {
   try {
-    const { registration_id, amount_cents, currency, phone } = req.body;
+    const { registration_id, amount_cents, currency, phone, email } = req.body;
     if (!registration_id || !amount_cents) {
       return res.status(400).json({ error: 'registration_id and amount_cents required' });
     }
 
+    // Clean base URL to prevent double slashes
+    const cleanBase = FAPSHI_BASE.replace(/\/$/, '');
+
     const payload = {
       amount: Number(amount_cents),
-      email: req.body.email || undefined,
+      email: email || undefined,
       userId: registration_id,
-      externalId: req.body.externalId || undefined,
-      redirectUrl: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/registration-complete`,
-      message: req.body.message || 'Registration fee'
+      externalId: registration_id,
+      redirectUrl: `${process.env.FRONTEND_URL || 'https://www.ubatechcamp.org'}/registration-complete`,
+      message: 'Registration fee'
     };
 
-    const r = await axios.post(`${FAPSHI_BASE}/initiate-pay`, payload, { headers: FAPSHI_HEADERS, timeout: 10000 });
+    console.log('Sending pay request to Fapshi:', cleanBase + '/initiate-pay');
+    const r = await axios.post(`${cleanBase}/initiate-pay`, payload, { headers: FAPSHI_HEADERS, timeout: 10000 });
     const data = r.data || {};
 
     // Store minimal mapping
@@ -355,6 +378,12 @@ app.post('/api/webhook/fapshi', async (req, res) => {
 app.get('/api/payments/store/:id', (req, res) => {
   const id = req.params.id;
   return res.json(payments.get(id) || null);
+});
+
+// Fallback 404 handler for unknown routes
+app.use((req, res) => {
+  console.log(`404 Not Found: ${req.method} ${req.path}`);
+  res.status(404).json({ error: `Path ${req.path} not found on this server.` });
 });
 
 app.listen(port, () => {
