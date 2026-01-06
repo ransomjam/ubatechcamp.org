@@ -44,7 +44,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const FAPSHI_BASE = (process.env.FAPSHI_BASE_URL || 'https://sandbox.fapshi.com').trim();
+const FAPSHI_BASE = (process.env.FAPSHI_BASE_URL || 'https://live.fapshi.com').trim();
 const fapshi = require('./fapshi');
 
 // Log configuration status on startup
@@ -214,6 +214,7 @@ app.post('/api/payments/fapshi', async (req, res) => {
     const payload = {
       amount: Number(amount_cents),
       email: email || undefined,
+      phone: phone || undefined,
       userId: registration_id,
       externalId: registration_id,
       redirectUrl: `${process.env.FRONTEND_URL || 'https://www.ubatechcamp.org'}/registration-complete`,

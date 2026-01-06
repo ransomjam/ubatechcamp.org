@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const fapshi = {
   apiuser: (process.env.FAPSHI_APIUSER || 'f3b6d10d-c2a7-458b-9103-69b1b9dac9de').trim(),
-  apikey: (process.env.FAPSHI_APIKEY || 'FAK_b420884db921b0bba76184ff6dbbaa78').trim(),
+  apikey: (process.env.FAPSHI_APIKEY || 'FAK_b58f060abd2b77161d07c0214bfac65d').trim(),
   baseUrl: (process.env.FAPSHI_BASE_URL || 'https://sandbox.fapshi.com').trim().replace(/\/$/, ''),
 
   async initiatePay(payment) {
