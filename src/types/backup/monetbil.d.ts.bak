@@ -1,0 +1,33 @@
+// Backup of monetbil types
+// Original path: src/types/monetbil.d.ts
+// ----- BEGIN ARCHIVE -----
+declare global {
+  interface MonetbilPayOptions {
+    service_key: string;
+    amount: number;
+    phone?: string;
+    locale?: string;
+    country?: string;
+    currency?: string;
+    item_ref?: string;
+    payment_ref?: string;
+    user?: string;
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    return_url?: string;
+    notify_url?: string;
+    logo?: string;
+    onComplete?: (data: { status: string; transaction: string }) => void;
+    onError?: (error: any) => void;
+  }
+
+  interface MonetbilCheckoutInterface {
+    pay: (options: MonetbilPayOptions) => void;
+  }
+
+  const MonetbilCheckout: MonetbilCheckoutInterface;
+}
+
+export {};
+// ----- END ARCHIVE -----

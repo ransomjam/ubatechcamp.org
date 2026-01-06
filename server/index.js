@@ -1,0 +1,360 @@
+require('dotenv').config();
+const express = require('express');
+const bodyParser = require('body-parser');
+const axios = require('axios');
+const app = express();
+const port = process.env.PORT || 4001;
+
+// Manual CORS middleware
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  // Allow localhost:8080 and other common dev origins
+  if (origin && (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization,x-admin-key');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+app.use(bodyParser.json());
+
+const FAPSHI_BASE = process.env.FAPSHI_BASE_URL || 'https://sandbox.fapshi.com';
+const FAPSHI_HEADERS = {
+  apiuser: process.env.FAPSHI_APIUSER || 'c02a978a-5e79-4b8e-9906-32847acaacc5',
+  apikey: process.env.FAPSHI_APIKEY || 'FAK_TEST_c90f693f3811bd439900'
+};
+
+const payments = new Map();
+const supabase = require('./supabase');
+
+// --- Payout Logic for Ambassadors ---
+async function processRecommendationPayout(transId) {
+  try {
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) return;
+
+    // 1. Get the payment and its registration
+    const { data: payment, error: pError } = await supabase
+      .from('payments')
+      .select('*, registrations(id, recommendation_code, status)')
+      .eq('provider_reference', transId)
+      .single();
+
+    if (pError || !payment) {
+      console.error(`Error finding payment ${transId}:`, pError?.message);
+      return;
+    }
+
+    // Safety: If registration is already 'completed', don't payout again
+    if (payment.registrations?.status === 'completed') {
+       console.log(`Registration for payment ${transId} already marked as completed. Skipping payout.`);
+       return;
+    }
+
+    if (!payment.registrations?.recommendation_code) {
+      console.log(`No recommendation payout needed for ${transId}`);
+      // Still need to mark registration as completed
+      await supabase.from('registrations').update({ status: 'completed' }).eq('id', payment.registrations.id);
+      return;
+    }
+
+    // 2. Check if already processed (find the person)
+    let person = null;
+    let type = null;
+
+    // Try ambassador first
+    const { data: ambassador, error: aError } = await supabase
+      .from('ambassadors')
+      .select('id, balance_cents, recommendation_code')
+      .eq('recommendation_code', payment.registrations.recommendation_code)
+      .eq('status', 'approved')
+      .maybeSingle();
+
+    if (ambassador) {
+      person = ambassador;
+      type = 'ambassador';
+    } else {
+      // Try tutor
+      const { data: tutor, error: tError } = await supabase
+        .from('tutors')
+        .select('id, balance_cents, recommendation_code')
+        .eq('recommendation_code', payment.registrations.recommendation_code)
+        .eq('status', 'approved')
+        .maybeSingle();
+      
+      if (tutor) {
+        person = tutor;
+        type = 'tutor';
+      }
+    }
+
+    if (!person) {
+      console.warn(`No approved ambassador or tutor found for code: ${payment.registrations.recommendation_code}`);
+      return;
+    }
+
+    // 4. Update the balance (Ambassador: 500 XAF, Tutor: 1000 XAF)
+    const amountToCredit = type === 'tutor' ? 1000 : 500;
+    const newBalance = Number(person.balance_cents || 0) + amountToCredit;
+    
+    const { error: uError } = await supabase
+      .from(type === 'tutor' ? 'tutors' : 'ambassadors')
+      .update({ balance_cents: newBalance })
+      .eq('id', person.id);
+
+    if (uError) {
+      console.error(`Failed to update ${type} balance:`, uError.message);
+    } else {
+      console.log(`Successfully credited ${type} ${person.id} with ${amountToCredit} XAF for recommendation ${transId}`);
+    }
+
+    // 5. Update registration status to 'completed'
+    await supabase.from('registrations').update({ status: 'completed' }).eq('id', payment.registrations.id);
+
+  } catch (err) {
+    console.error('Error in processRecommendationPayout:', err.message);
+  }
+}
+
+// --- Registration Logic ---
+app.post('/api/registrations', async (req, res) => {
+  try {
+    const data = req.body;
+    console.log('Registration request received:', data.email);
+
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY !== 'your_service_role_key_here') {
+      // Basic check for existing email to match frontend expectation (409 conflict)
+      const { data: existing } = await supabase
+        .from('registrations')
+        .select('id')
+        .eq('email', data.email)
+        .maybeSingle();
+
+      if (existing) {
+        console.log('Registration conflict: email already exists', data.email);
+        return res.status(409).json({ id: existing.id, message: 'Email already registered' });
+      }
+
+      // Map fields from frontend to DB schema
+      const insertData = {
+        full_name: data.full_name,
+        email: data.email,
+        phone: data.phone,
+        institution: data.institution,
+        field_of_study: data.field_of_study,
+        program: data.program,
+        recommendation_code: data.recommendation_code,
+        age: data.age,
+        education_level: data.education_level,
+        status: 'pending_payment' // Set initial status
+      };
+
+      const { data: newReg, error } = await supabase
+        .from('registrations')
+        .insert([insertData])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase Registration Error:', error.message);
+        return res.status(500).json({ error: error.message });
+      }
+
+      console.log('Registration successful:', newReg.id);
+      return res.status(201).json(newReg);
+    } else {
+      console.warn('Supabase not configured. Using Mock ID for registration.');
+      return res.status(201).json({ 
+        id: 'mock-reg-' + Math.random().toString(36).slice(2, 9),
+        ...data 
+      });
+    }
+  } catch (err) {
+    console.error('Registration handler error:', err.message);
+    return res.status(500).json({ error: 'Internal server error during registration' });
+  }
+});
+
+app.post('/api/payments/fapshi', async (req, res) => {
+  try {
+    const { registration_id, amount_cents, currency, phone } = req.body;
+    if (!registration_id || !amount_cents) {
+      return res.status(400).json({ error: 'registration_id and amount_cents required' });
+    }
+
+    const payload = {
+      amount: Number(amount_cents),
+      email: req.body.email || undefined,
+      userId: registration_id,
+      externalId: req.body.externalId || undefined,
+      redirectUrl: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/registration-complete`,
+      message: req.body.message || 'Registration fee'
+    };
+
+    const r = await axios.post(`${FAPSHI_BASE}/initiate-pay`, payload, { headers: FAPSHI_HEADERS, timeout: 10000 });
+    const data = r.data || {};
+
+    // Store minimal mapping
+    const paymentId = data.transId || data.transId || (Math.random().toString(36).slice(2, 10));
+    payments.set(paymentId, {
+      registration_id,
+      amount: payload.amount,
+      status: 'CREATED',
+      checkout_url: data.link || data.checkout_url || null,
+      dateInitiated: data.dateInitiated || new Date().toISOString()
+    });
+
+    // Persist to Supabase if configured
+    try {
+      if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY !== 'your_service_role_key_here') {
+        // Validate if registration_id is a valid UUID to avoid Postgres error
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(registration_id);
+        
+        const { error } = await supabase.from('payments').insert([{ 
+          registration_id: isUuid ? registration_id : null,
+          phone: phone || null,
+          amount_cents: payload.amount,
+          currency: currency || 'XAF',
+          provider: 'fapshi', // Now supported by the updated enum
+          status: 'created',
+          provider_reference: paymentId,
+          message: payload.message || (isUuid ? 'Registration fee' : `Test Payment (Orig ID: ${registration_id})`)
+        }]);
+
+        if (error) {
+          console.error('CRITICAL Supabase Insert Error:', error.message, '| Hint:', error.hint, '| Details:', error.details);
+          throw error;
+        } else {
+          console.log(`Successfully persisted payment ${paymentId} to Supabase.`);
+        }
+      } else {
+        console.warn('Supabase not configured or using placeholder key. Skipping DB insert.');
+      }
+    } catch (dbErr) {
+      console.error('Supabase DB Error:', dbErr.message || dbErr);
+    }
+    return res.json({ payment_id: paymentId, checkout_url: data.link || data.checkout_url });
+  } catch (err) {
+    console.error('createFapshiPayment error', err?.response?.data || err.message);
+    const code = err?.response?.status || 500;
+    const msg = err?.response?.data?.message || err?.message || 'Failed to create payment';
+    return res.status(code).json({ error: msg });
+  }
+});
+
+app.get('/api/payments/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (!id) return res.status(400).json({ error: 'id required' });
+
+    // First attempt to query Fapshi for real status
+    const r = await axios.get(`${FAPSHI_BASE}/payment-status/${id}`, { headers: FAPSHI_HEADERS, timeout: 8000 });
+    const data = r.data || {};
+    // normalize status
+    const statusMap = {
+      CREATED: 'created',
+      PENDING: 'pending',
+      SUCCESSFUL: 'succeeded',
+      FAILED: 'failed',
+      EXPIRED: 'expired'
+    };
+    const normalized = statusMap[(data.status || '').toUpperCase()] || (data.status || 'unknown');
+
+    // update store
+    const existing = payments.get(id) || {};
+    payments.set(id, { ...existing, status: normalized, fapshi: data });
+
+    // update DB record if available
+    try {
+      if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY !== 'your_service_role_key_here') {
+        // Fetch current status to see if it's a new success
+        const { data: currentPayment } = await supabase.from('payments').select('status').eq('provider_reference', id).single();
+        
+        const { error } = await supabase.from('payments').update({ status: normalized }).eq('provider_reference', id);
+        if (error) console.error('Supabase DB Update Error:', error.message);
+
+        // If it just became succeeded, process payout
+        if (normalized === 'succeeded' && currentPayment?.status !== 'succeeded') {
+          await processRecommendationPayout(id);
+        }
+      }
+    } catch (dbErr) {
+      console.warn('Supabase update failed:', dbErr.message || dbErr);
+    }
+
+    return res.json({ id, status: normalized, raw: data });
+  } catch (err) {
+    console.error('get payment status error', err?.response?.data || err.message);
+    const code = err?.response?.status || 500;
+    const msg = err?.response?.data?.message || err?.message || 'Failed to get status';
+    return res.status(code).json({ error: msg });
+  }
+});
+
+// Webhook endpoint that Fapshi will call
+app.post('/api/webhook/fapshi', async (req, res) => {
+  try {
+    const body = req.body || {};
+    const transId = body.transId || body.trans_id || body.id;
+    if (!transId) {
+      return res.status(400).json({ message: 'transId required' });
+    }
+
+    // Verify by fetching status from Fapshi
+    try {
+      const r = await axios.get(`${FAPSHI_BASE}/payment-status/${transId}`, { headers: FAPSHI_HEADERS, timeout: 8000 });
+      const data = r.data || {};
+      const status = (data.status || '').toUpperCase();
+
+      const statusMap = { SUCCESSFUL: 'succeeded', FAILED: 'failed', EXPIRED: 'expired', PENDING: 'pending', CREATED: 'created' };
+      const normalized = statusMap[status] || data.status || 'unknown';
+
+      const existing = payments.get(transId) || {};
+      payments.set(transId, { ...existing, status: normalized, fapshi: data });
+
+      // update DB record if available
+      try {
+        if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY !== 'your_service_role_key_here') {
+          // Fetch current status
+          const { data: currentPayment } = await supabase.from('payments').select('status').eq('provider_reference', transId).single();
+
+          const { error } = await supabase.from('payments').update({ status: normalized }).eq('provider_reference', transId);
+          if (error) console.error('Supabase Webhook DB Update Error:', error.message);
+
+          // If it just became succeeded, process payout
+          if (normalized === 'succeeded' && currentPayment?.status !== 'succeeded') {
+            await processRecommendationPayout(transId);
+          }
+        }
+      } catch (dbErr) {
+        console.warn('Supabase webhook update failed:', dbErr.message || dbErr);
+      }
+      // TODO: persist to DB / notify frontend via webhook or websocket
+      console.log(`Webhook received for ${transId}: ${normalized}`);
+
+      return res.json({ message: 'ok' });
+    } catch (e) {
+      console.error('Webhook verify error', e?.response?.data || e.message);
+      return res.status(500).json({ message: 'failed to verify' });
+    }
+  } catch (err) {
+    console.error('webhook error', err.message);
+    return res.status(500).json({ message: 'server error' });
+  }
+});
+
+app.get('/api/payments/store/:id', (req, res) => {
+  const id = req.params.id;
+  return res.json(payments.get(id) || null);
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});

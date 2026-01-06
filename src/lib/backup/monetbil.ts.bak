@@ -1,0 +1,61 @@
+// Backup of original monetbil integration
+// Original path: src/lib/monetbil.ts
+// ----- BEGIN ARCHIVE -----
+// Monetbil Payment Integration
+const MONETBIL_SERVICE_KEY = "IGh67u9qDQwcc0xkUIn3YeBxHJHh3ko1";
+
+interface MonetbilPaymentOptions {
+  amount: number;
+  itemRef?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  onComplete?: (data: { status: string; transaction: string }) => void;
+  onError?: (error: any) => void;
+}
+
+export const initiateMonetbilPayment = ({
+  amount,
+  itemRef,
+  firstName,
+  lastName,
+  email,
+  phone,
+  onComplete,
+  onError,
+}: MonetbilPaymentOptions) => {
+  if (typeof MonetbilCheckout === "undefined") {
+    console.error("Monetbil script not loaded");
+    onError?.({ message: "Payment system not available. Please refresh and try again." });
+    return;
+  }
+
+  MonetbilCheckout.pay({
+    service_key: MONETBIL_SERVICE_KEY,
+    amount,
+    item_ref: itemRef,
+    first_name: firstName,
+    last_name: lastName,
+    email,
+    phone,
+    currency: "XAF",
+    country: "CM",
+    locale: "en",
+    onComplete: (data) => {
+      console.log("Payment completed:", data);
+      onComplete?.(data);
+    },
+    onError: (error) => {
+      console.error("Payment error:", error);
+      onError?.(error);
+    },
+  });
+};
+
+export const updateMonetbilServiceKey = (key: string) => {
+  // This would be used to dynamically update the key if needed
+  console.log("Monetbil service key updated");
+};
+
+// ----- END ARCHIVE -----

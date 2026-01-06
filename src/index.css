@@ -1,0 +1,341 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* UBa Tech Camp 2025 - Cyber-Glass High-Tech Design System */
+
+@layer base {
+  :root {
+    /* Base colors - Navy Blue & White Theme */
+    --background: 222 47% 11%;      /* Deep navy */
+    --foreground: 0 0% 100%;        /* Pure white */
+    --card: 222 47% 13%;            /* Navy */
+    --card-foreground: 0 0% 100%;   /* White */
+    --popover: 222 47% 13%;
+    --popover-foreground: 0 0% 100%;
+    
+    /* Primary colors - Royal Blue */
+    --primary: 210 100% 50%;        /* Bright royal blue */
+    --primary-foreground: 0 0% 100%; /* White */
+    --primary-hover: 210 100% 45%;
+    --primary-glow: 210 100% 60%;
+    
+    /* Secondary colors - Lighter Blue */
+    --secondary: 210 100% 65%;      /* Light blue */
+    --secondary-foreground: 222 47% 11%; /* Navy */
+    
+    /* Muted colors */
+    --muted: 222 30% 20%;           /* Dark navy */
+    --muted-foreground: 0 0% 100%;  /* White */
+    
+    /* Accent colors - Bright Blue */
+    --accent: 210 100% 55%;         /* Bright blue */
+    --accent-foreground: 0 0% 100%; /* White */
+    
+    /* Success, warning, destructive */
+    --success: 210 100% 50%;
+    --success-foreground: 0 0% 100%;
+    --warning: 210 100% 50%;
+    --warning-foreground: 0 0% 100%;
+    --destructive: 210 100% 40%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Border and input */
+    --border: 210 50% 30%;
+    --input: 222 30% 20%;
+    --ring: 210 100% 50%;
+    
+    /* Tech camp specific colors */
+    --tech-blue: 210 100% 50%;
+    --tech-navy: 222 47% 11%;
+    --tech-white: 0 0% 100%;
+    
+    /* Border radius */
+    --radius: 1rem;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(210, 100%, 50%) 0%, hsl(210, 100%, 65%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(222, 47%, 11%) 0%, hsl(210, 100%, 30%) 50%, hsl(210, 100%, 50%) 100%);
+    --gradient-card: linear-gradient(145deg, rgba(10, 15, 45, 0.8) 0%, rgba(10, 15, 45, 0.9) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(222, 47%, 11%) 0%, hsl(222, 40%, 15%) 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    
+    /* Glass morphism shadows */
+    --shadow-glass: 0 8px 32px 0 rgba(0, 85, 184, 0.3);
+    --shadow-glow: 0 0 30px rgba(0, 85, 184, 0.5);
+  }
+
+  :root:not(.dark) {
+    /* Light Mode - Professional White & Blue Theme with High Contrast */
+    --background: 0 0% 98%;            /* Soft white */
+    --foreground: 222 50% 15%;         /* Very dark navy text for strong contrast */
+    --card: 0 0% 100%;                 /* Pure white cards */
+    --card-foreground: 222 50% 15%;    /* Dark navy */
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 50% 15%;
+    
+    --primary: 210 100% 45%;           /* Deeper blue for better contrast */
+    --primary-foreground: 0 0% 100%;   /* White text */
+    --primary-hover: 210 100% 40%;
+    --primary-glow: 210 100% 55%;
+    
+    --secondary: 210 95% 92%;          /* Very light blue */
+    --secondary-foreground: 210 100% 25%; /* Deep blue for contrast */
+    
+    --muted: 210 30% 94%;              /* Light blue-gray */
+    --muted-foreground: 222 35% 35%;   /* Darker gray for readability */
+    
+    --accent: 210 100% 50%;            /* Bright accent blue */
+    --accent-foreground: 0 0% 100%;    /* White */
+    
+    --success: 210 100% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 35 100% 50%;
+    --warning-foreground: 0 0% 100%;
+    --destructive: 0 84% 55%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 210 25% 88%;             /* Subtle border */
+    --input: 0 0% 100%;                /* White input */
+    --ring: 210 100% 45%;
+    
+    --tech-blue: 210 100% 45%;
+    --tech-navy: 222 50% 15%;
+    --tech-white: 0 0% 100%;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(210, 100%, 45%) 0%, hsl(210, 100%, 60%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(210, 60%, 97%) 0%, hsl(210, 80%, 94%) 40%, hsl(210, 100%, 96%) 100%);
+    --gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 1) 0%, rgba(248, 251, 254, 1) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(210, 50%, 98%) 0%, hsl(210, 60%, 96%) 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 251, 254, 0.9) 100%);
+    
+    --shadow-glass: 0 8px 24px 0 rgba(0, 85, 184, 0.08);
+    --shadow-glow: 0 0 24px rgba(0, 85, 184, 0.15);
+  }
+
+  .dark {
+    /* Navy Blue & White Theme */
+    --background: 222 47% 11%;
+    --foreground: 0 0% 100%;
+    --card: 222 47% 13%;
+    --card-foreground: 0 0% 100%;
+    --popover: 222 47% 13%;
+    --popover-foreground: 0 0% 100%;
+    
+    --primary: 210 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 210 100% 45%;
+    
+    --secondary: 210 100% 65%;
+    --secondary-foreground: 222 47% 11%;
+    
+    --muted: 222 30% 20%;
+    --muted-foreground: 0 0% 100%;
+    
+    --accent: 210 100% 55%;
+    --accent-foreground: 0 0% 100%;
+    
+    --border: 210 50% 30%;
+    --input: 222 30% 20%;
+    --ring: 210 100% 50%;
+    
+    --tech-blue: 210 100% 50%;
+    --tech-navy: 222 47% 11%;
+    --tech-white: 0 0% 100%;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(210, 100%, 50%) 0%, hsl(210, 100%, 65%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(222, 47%, 11%) 0%, hsl(210, 100%, 30%) 50%, hsl(210, 100%, 50%) 100%);
+    --gradient-card: linear-gradient(145deg, rgba(10, 15, 45, 0.8) 0%, rgba(10, 15, 45, 0.9) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(222, 47%, 11%) 0%, hsl(222, 40%, 15%) 100%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+}
+
+@layer components {
+  /* Glass Morphism Card */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-glass);
+    @apply rounded-2xl transition-all duration-300;
+  }
+  
+  :root:not(.dark) .glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(0, 85, 184, 0.12);
+    box-shadow: 0 4px 16px 0 rgba(0, 85, 184, 0.08);
+  }
+  
+  .glass-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(0, 85, 184, 0.3);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-4px);
+  }
+  
+  :root:not(.dark) .glass-card:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(0, 85, 184, 0.25);
+    box-shadow: 0 8px 24px 0 rgba(0, 85, 184, 0.12);
+  }
+  
+  /* Floating Card with lift effect */
+  .floating-card {
+    @apply glass-card transform transition-all duration-300;
+  }
+  
+  .floating-card:hover {
+    @apply scale-[1.02];
+  }
+  
+  /* Hero gradient background */
+  .hero-gradient {
+    background: var(--gradient-hero);
+  }
+  
+  /* Card gradient */
+  .card-gradient {
+    background: var(--gradient-card);
+  }
+  
+  /* Glow effect for CTAs */
+  .glow-button {
+    @apply relative overflow-hidden;
+    box-shadow: 0 0 20px rgba(0, 85, 184, 0.4);
+  }
+  
+  .glow-button::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  }
+  
+  .glow-button:hover::before {
+    @apply opacity-100;
+    animation: shine 0.8s ease-in-out;
+  }
+  
+  /* Auto-scroll carousel animation */
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  
+  .auto-scroll {
+    animation: scroll-left 30s linear infinite;
+  }
+  
+  .auto-scroll:hover {
+    animation-play-state: paused;
+  }
+  
+  /* LCD-style scrolling text animation */
+  @keyframes scroll-lcd {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-33.333%);
+    }
+  }
+  
+  /* Swipe container for mobile */
+  .swipe-container {
+    @apply flex gap-4 md:gap-6 overflow-x-auto pb-4 snap-x snap-mandatory px-4 md:px-0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .swipe-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .swipe-card {
+    @apply flex-none w-[85vw] sm:w-[70vw] md:w-80 snap-start;
+  }
+
+  /* Hide scrollbar utility */
+  .hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Animated gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent;
+    animation: gradient-shift 3s ease infinite;
+  }
+  
+  /* Tech gradient submitting button animation */
+  .btn-submitting {
+    @apply relative overflow-hidden text-white;
+    background: linear-gradient(90deg, 
+      hsl(210, 100%, 45%) 0%, 
+      hsl(210, 100%, 60%) 25%, 
+      hsl(195, 100%, 50%) 50%, 
+      hsl(210, 100%, 60%) 75%, 
+      hsl(210, 100%, 45%) 100%);
+    background-size: 200% 100%;
+    animation: tech-gradient-flow 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes tech-gradient-flow {
+    0% { background-position: 100% 50%; }
+    100% { background-position: -100% 50%; }
+  }
+  
+  /* Error input styling */
+  .input-error {
+    @apply border-red-500 ring-2 ring-red-500/30;
+  }
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(200%) rotate(45deg); }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Dark mode placeholder styling */
+.dark input::placeholder,
+.dark textarea::placeholder {
+  opacity: 0.5;
+}
+
+.dark input::-webkit-input-placeholder,
+.dark textarea::-webkit-input-placeholder {
+  opacity: 0.5;
+}
+
+.dark input::-moz-placeholder,
+.dark textarea::-moz-placeholder {
+  opacity: 0.5;
+}
+
+.dark input:-ms-input-placeholder,
+.dark textarea:-ms-input-placeholder {
+  opacity: 0.5;
+}
