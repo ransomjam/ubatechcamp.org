@@ -33,16 +33,21 @@ app.use(cors({
 
 app.use(express.json());
 
+// Root route for Render health checks
+app.get('/', (req, res) => {
+  res.json({ status: 'Backend is running', timestamp: new Date() });
+});
+
 // DEBUG LOGGING: This will show in Render logs
 app.use((req, res, next) => {
   console.log(`Incoming Request: ${req.method} ${req.path}`);
   next();
 });
 
-const FAPSHI_BASE = process.env.FAPSHI_BASE_URL || 'https://sandbox.fapshi.com';
+const FAPSHI_BASE = (process.env.FAPSHI_BASE_URL || 'https://sandbox.fapshi.com').trim();
 const FAPSHI_HEADERS = {
-  apiuser: process.env.FAPSHI_APIUSER,
-  apikey: process.env.FAPSHI_APIKEY
+  apiuser: (process.env.FAPSHI_APIUSER || '').trim(),
+  apikey: (process.env.FAPSHI_APIKEY || '').trim()
 };
 
 // Log configuration status on startup
