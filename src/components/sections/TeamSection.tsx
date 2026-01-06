@@ -25,7 +25,8 @@ const allTeamMembers = [
   { name: "Desmond", role: "Data Science Instructor", description: "Experienced data science trainer", image: yembiImage, social: { linkedin: "#", facebook: "#" } },
   { name: "Anyu Princewill Fon", role: "Data Analysis Instructor", description: "Specialist in statistical analysis and data visualization techniques", image: princewill, social: { linkedin: "#", facebook: "#" } },
   { name: "Nanguat Blaise", role: "Student Leader", description: "SA President NAHPISA, 2023/2024", image: BlaiseImage, social: { linkedin: "#", facebook: "#" } },
-  { name: "Kadjo Yve", role: "Student Leader", description: "SA President FEMSSA, 2023/2024", image: yveImage, social: { linkedin: "#", facebook: "#" } }
+  { name: "Kadjo Yve", role: "Student Leader", description: "SA President FEMSSA, 2023/2024", image: yveImage, social: { linkedin: "#", facebook: "#" } },
+  { name: "K. Gregory", role: "Linux Administrator", description: "System administration and Linux infrastructure specialist", image: profImage, social: { linkedin: "#", facebook: "#" } }
 ];
 
 export function TeamSection() {
