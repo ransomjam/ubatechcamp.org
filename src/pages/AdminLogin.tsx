@@ -28,12 +28,12 @@ const AdminLogin = () => {
       if (error) throw error;
 
       const userEmail = data.user?.email?.toLowerCase();
-      const isSuperEmail = userEmail === 'superadmin@ubatechcamp.com';
-      const userRole = isSuperEmail ? 'super' : (data.user?.user_metadata?.role || "admin");
+      const isSuper = userEmail === 'superadmin@ubatechcamp.com' || 
+                     data.user?.user_metadata?.role === 'super';
       
-      console.log("Login successful, role:", userRole);
+      console.log("Login successful, isSuper:", isSuper);
       
-      if (userRole === "super") {
+      if (isSuper) {
         toast({
           title: "Super Admin Login successful",
           description: "Accessing Command Centre...",

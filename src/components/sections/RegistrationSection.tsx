@@ -72,10 +72,10 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
       const regId = res?.id || null;
       setRegistrationId(regId);
 
-      // 2) Ask backend to create a FAPSHI payment and return checkout URL (amount: 5000 XAF)
+      // 2) Ask backend to create a FAPSHI payment and return checkout URL (amount: 100 XAF)
       const pay = await api.createFapshiPayment({ 
         registration_id: regId, 
-        amount_cents: 5000, 
+        amount_cents: 100, 
         currency: "XAF", 
         phone: formData.phone || undefined,
         email: formData.email 
@@ -375,7 +375,7 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
                 </div>
 
                 {/* duplicate education level removed */}
-                <div className="text-sm text-muted-foreground mb-2">Registration fee: <span className="font-semibold text-foreground">5,000 XAF</span> — you'll be redirected to secure checkout to complete payment.</div>
+                <div className="text-sm text-muted-foreground mb-2">Registration fee: <span className="font-semibold text-foreground">1,00XAF</span> — you'll be redirected to secure checkout to complete payment.</div>
                 <Button 
                   type="submit" 
                   variant={isSubmitting ? "submitting" : "default"}
@@ -407,7 +407,7 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
                     fullName: formData.fullName,
                     email: formData.email,
                     program: formData.program,
-                    amount: 5000,
+                    amount: 100,
                     transId: paymentId || 'N/A',
                     date: new Date().toLocaleDateString()
                   })}

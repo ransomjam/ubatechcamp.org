@@ -558,7 +558,7 @@ const mockPayments = [
     id: "1",
     student_name: "John Doe",
     email: "john@example.com",
-    amount: 500000,
+    amount: 10000,
     currency: "UGX",
     payment_method: "Mobile Money",
     status: "completed",
@@ -569,7 +569,7 @@ const mockPayments = [
     id: "2",
     student_name: "Jane Smith",
     email: "jane@example.com",
-    amount: 1500000,
+    amount: 110000,
     currency: "UGX",
     payment_method: "Bank Transfer",
     status: "pending",
@@ -932,7 +932,7 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
 
     // Registration fee questions
     if (lowerMessage.includes("registration") && (lowerMessage.includes("fee") || lowerMessage.includes("cost"))) {
-      return "The registration fee is 5,000 FRS. This covers your initial enrollment and materials. Would you like to know about our complete program fees?";
+      return "The registration fee is 1,00FRS. This covers your initial enrollment and materials. Would you like to know about our complete program fees?";
     }
 
     // Complete program questions
@@ -961,7 +961,7 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
     }
 
     // Default response
-    return "I'm here to help! I can answer questions about:\n• Registration fees (5,000 FRS)\n• Complete program fees (50,000 FRS)\n• Program schedules and duration\n• Available programs\n• Contact information\n\nWhat would you like to know?";
+    return "I'm here to help! I can answer questions about:\n• Registration fees (1,00FRS)\n• Complete program fees (50,000 FRS)\n• Program schedules and duration\n• Available programs\n• Contact information\n\nWhat would you like to know?";
   };
 
   const handleSend = async () => {
@@ -1571,7 +1571,7 @@ type MobileProvider = "orange" | "mtn";
 interface PaymentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  amount: string;        // for display only ("5,000 FRS")
+  amount: string;        // for display only ("1,00FRS")
   planTitle: string;     // for display only
   applicantName: string; // for display only
   registrationId: string | null;  
@@ -1579,7 +1579,7 @@ interface PaymentDialogProps {
   paymentPlans?: { id: string; price: string }[]; // optional plan list
 }
 
-// Helper: convert display amount ("5,000 FRS") -> numeric cents
+// Helper: convert display amount ("1,00FRS") -> numeric cents
 const toCents = (priceLabel: string) => {
   const digits = priceLabel.replace(/[^\d]/g, "");
   return Number(digits || 0);
@@ -3278,7 +3278,7 @@ const paymentPlans = [
   {
     id: "registration",
     title: "Registration Fee",
-    price: "5,000 FRS",
+    price: "1,00FRS",
     description: "Initial registration fee to secure your spot",
     features: [
       "Application processing",
@@ -3677,7 +3677,7 @@ export const RegistrationSection: React.FC = () => {
       <PaymentDialog
         open={showPaymentDialog}
         onOpenChange={setShowPaymentDialog}
-        amount={paymentPlans.find((p) => p.id === selectedPlan)?.price || "5,000 FRS"}
+        amount={paymentPlans.find((p) => p.id === selectedPlan)?.price || "1,00FRS"}
         planTitle={paymentPlans.find((p) => p.id === selectedPlan)?.title || "Registration Fee"}
         applicantName={formData.fullName}
         registrationId={registrationId}

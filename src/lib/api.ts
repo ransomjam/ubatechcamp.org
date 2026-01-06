@@ -1,6 +1,8 @@
 // src/lib/api.ts
 export const API_BASE =
-  (import.meta.env.VITE_API_BASE_URL || "https://www.ubatechcamp.org").trim();
+  //(import.meta.env.VITE_API_BASE_URL || "https://www.ubatechcamp.org").trim();
+  (import.meta.env.VITE_API_BASE_URL || "http://localhost:8081").trim();
+
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 

@@ -17,7 +17,7 @@ const LearnOnlinePayment = () => {
     setIsProcessing(true);
     
     initiateMonetbilPayment({
-      amount: 5000,
+      amount: 100,
       itemRef: `learn-online-${Date.now()}`,
       onComplete: (data) => {
         setIsProcessing(false);
@@ -67,7 +67,7 @@ const LearnOnlinePayment = () => {
               </p>
               <div className="inline-block bg-primary/10 border border-primary/30 rounded-lg px-6 py-3">
                 <p className="text-sm text-foreground/70">Amount</p>
-                <p className="text-3xl font-bold text-primary">5,000 FRS</p>
+                <p className="text-3xl font-bold text-primary">1,00FRS</p>
               </div>
             </div>
 
@@ -104,7 +104,7 @@ const LearnOnlinePayment = () => {
                 size="lg"
                 disabled={isProcessing}
               >
-                {isProcessing ? "Opening Payment..." : "Pay 5,000 FRS with Mobile Money"}
+                {isProcessing ? "Opening Payment..." : "Pay 1,00FRS with Mobile Money"}
               </Button>
               
               <p className="text-center text-sm text-foreground/60">

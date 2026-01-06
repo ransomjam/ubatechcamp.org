@@ -16,21 +16,22 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
         navigate("/admin/login");
         return;
       }
-      const userEmail = session.user.email?.toLowerCase();
-      const isSuperEmail = userEmail === 'superadmin@ubatechcamp.com';
-      const role = isSuperEmail ? 'super' : (session.user.user_metadata?.role || "admin");
-      setUserRole(role);
+      const userEmail = user.email?.toLowerCase();
+      const isSuper = userEmail === 'superadmin@ubatechcamp.com' || 
+                      user.user_metadata?.role === 'super';
+      
+      setUserRole(isSuper ? 'super' : (user.user_metadata?.role || "admin"));
       
       // Auto-redirect super admin to their dedicated panel unless they specifically chose to view the admin dashboard
       const searchParams = new URLSearchParams(window.location.search);
       const isViewingAdmin = searchParams.get('view') === 'admin';
       
-      if (role === 'super' && !isViewingAdmin) {
+      if (isSuper && !isViewingAdmin) {
         navigate('/admin/super', { replace: true });
         return;
       }

@@ -84,12 +84,12 @@ const SuperAdmin = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      const userEmail = session?.user?.email?.toLowerCase();
-      const isSuperEmail = userEmail === 'superadmin@ubatechcamp.com';
-      const isSuperRole = session?.user?.user_metadata?.role === 'super';
+      const { data: { user } } = await supabase.auth.getUser();
+      const userEmail = user?.email?.toLowerCase();
+      const isSuper = userEmail === 'superadmin@ubatechcamp.com' || 
+                      user?.user_metadata?.role === 'super';
       
-      if (!session || (!isSuperRole && !isSuperEmail)) {
+      if (!user || !isSuper) {
         navigate("/admin/login");
         return;
       }
