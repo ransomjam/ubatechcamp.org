@@ -44,20 +44,13 @@ app.use((req, res, next) => {
   next();
 });
 
-const FAPSHI_APIUSER = (process.env.FAPSHI_APIUSER || 'f3b6d10d-c2a7-458b-9103-69b1b9dac9de').trim();
-const FAPSHI_APIKEY = (process.env.FAPSHI_APIKEY || 'FAK_b420884db921b0bba76184ff6dbbaa78').trim();
-const FAPSHI_BASE = (process.env.FAPSHI_BASE_URL || 'https://sandbox.fapshi.com').trim().replace(/\/$/, '');
-
-const FAPSHI_HEADERS = {
-  'apiuser': FAPSHI_APIUSER,
-  'apikey': FAPSHI_APIKEY,
-  'Content-Type': 'application/json'
-};
+const FAPSHI_BASE = (process.env.FAPSHI_BASE_URL || 'https://sandbox.fapshi.com').trim();
+const fapshi = require('./fapshi');
 
 // Log configuration status on startup
 console.log('--- Configuration Status ---');
 console.log('FAPSHI_BASE_URL:', FAPSHI_BASE);
-console.log('FAPSHI_APIUSER:', FAPSHI_APIUSER);
+console.log('FAPSHI_APIUSER:', fapshi.apiuser);
 console.log('FRONTEND_URL:', process.env.FRONTEND_URL || 'https://www.ubatechcamp.org');
 console.log('---------------------------');
 
@@ -218,9 +211,6 @@ app.post('/api/payments/fapshi', async (req, res) => {
       return res.status(400).json({ error: 'registration_id and amount_cents required' });
     }
 
-    // Clean base URL to prevent double slashes
-    const cleanBase = FAPSHI_BASE.replace(/\/$/, '');
-
     const payload = {
       amount: Number(amount_cents),
       email: email || undefined,
@@ -230,9 +220,7 @@ app.post('/api/payments/fapshi', async (req, res) => {
       message: 'Registration fee'
     };
 
-    console.log('Sending pay request to Fapshi:', cleanBase + '/initiate-pay');
-    const r = await axios.post(`${cleanBase}/initiate-pay`, payload, { headers: FAPSHI_HEADERS, timeout: 10000 });
-    const data = r.data || {};
+    const data = await fapshi.initiatePay(payload);
 
     // Store minimal mapping
     const paymentId = data.transId || data.transId || (Math.random().toString(36).slice(2, 10));
@@ -275,9 +263,10 @@ app.post('/api/payments/fapshi', async (req, res) => {
     }
     return res.json({ payment_id: paymentId, checkout_url: data.link || data.checkout_url });
   } catch (err) {
-    console.error('createFapshiPayment error', err?.response?.data || err.message);
-    const code = err?.response?.status || 500;
-    const msg = err?.response?.data?.message || err?.message || 'Failed to create payment';
+    const errorData = err.response?.data || { message: err.message };
+    console.error('createFapshiPayment error', errorData);
+    const code = err.response?.status || 500;
+    const msg = errorData.message || 'Failed to create payment';
     return res.status(code).json({ error: msg });
   }
 });
@@ -288,8 +277,7 @@ app.get('/api/payments/:id', async (req, res) => {
     if (!id) return res.status(400).json({ error: 'id required' });
 
     // First attempt to query Fapshi for real status
-    const r = await axios.get(`${FAPSHI_BASE}/payment-status/${id}`, { headers: FAPSHI_HEADERS, timeout: 8000 });
-    const data = r.data || {};
+    const data = await fapshi.getPaymentStatus(id);
     // normalize status
     const statusMap = {
       CREATED: 'created',
@@ -324,9 +312,10 @@ app.get('/api/payments/:id', async (req, res) => {
 
     return res.json({ id, status: normalized, raw: data });
   } catch (err) {
-    console.error('get payment status error', err?.response?.data || err.message);
-    const code = err?.response?.status || 500;
-    const msg = err?.response?.data?.message || err?.message || 'Failed to get status';
+    const errorData = err.response?.data || { message: err.message };
+    console.error('get payment status error', errorData);
+    const code = err.response?.status || 500;
+    const msg = errorData.message || 'Failed to get status';
     return res.status(code).json({ error: msg });
   }
 });
@@ -342,8 +331,7 @@ app.post('/api/webhook/fapshi', async (req, res) => {
 
     // Verify by fetching status from Fapshi
     try {
-      const r = await axios.get(`${FAPSHI_BASE}/payment-status/${transId}`, { headers: FAPSHI_HEADERS, timeout: 8000 });
-      const data = r.data || {};
+      const data = await fapshi.getPaymentStatus(transId);
       const status = (data.status || '').toUpperCase();
 
       const statusMap = { SUCCESSFUL: 'succeeded', FAILED: 'failed', EXPIRED: 'expired', PENDING: 'pending', CREATED: 'created' };
@@ -374,7 +362,7 @@ app.post('/api/webhook/fapshi', async (req, res) => {
 
       return res.json({ message: 'ok' });
     } catch (e) {
-      console.error('Webhook verify error', e?.response?.data || e.message);
+      console.error('Webhook verify error', e.response?.data || e.message);
       return res.status(500).json({ message: 'failed to verify' });
     }
   } catch (err) {
