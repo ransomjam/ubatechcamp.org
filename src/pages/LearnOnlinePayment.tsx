@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { initiateMonetbilPayment } from "@/lib/monetbil";
+import { PAYMENT_CONFIG, formatAmount } from "@/lib/payment-config";
 
 const LearnOnlinePayment = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const LearnOnlinePayment = () => {
     setIsProcessing(true);
     
     initiateMonetbilPayment({
-      amount: 100,
+      amount: PAYMENT_CONFIG.LEARN_ONLINE_FEE_XAF,
       itemRef: `learn-online-${Date.now()}`,
       onComplete: (data) => {
         setIsProcessing(false);
@@ -67,7 +68,7 @@ const LearnOnlinePayment = () => {
               </p>
               <div className="inline-block bg-primary/10 border border-primary/30 rounded-lg px-6 py-3">
                 <p className="text-sm text-foreground/70">Amount</p>
-                <p className="text-3xl font-bold text-primary">100 FRS</p>
+                <p className="text-3xl font-bold text-primary">{formatAmount(PAYMENT_CONFIG.LEARN_ONLINE_FEE_XAF)} FRS</p>
               </div>
             </div>
 
@@ -104,7 +105,7 @@ const LearnOnlinePayment = () => {
                 size="lg"
                 disabled={isProcessing}
               >
-                {isProcessing ? "Opening Payment..." : "Pay 100 FRS with Mobile Money"}
+                {isProcessing ? "Opening Payment..." : `Pay ${formatAmount(PAYMENT_CONFIG.LEARN_ONLINE_FEE_XAF)} FRS with Mobile Money`}
               </Button>
               
               <p className="text-center text-sm text-foreground/60">

@@ -12,6 +12,7 @@ import { submitNewsletterSubscription } from "@/lib/db";
 import { submitToGoogleSheets } from "@/lib/googleSheets";
 import { api } from "@/lib/api";
 import { generateInvoice } from "@/lib/invoice";
+import { PAYMENT_CONFIG, formatAmount } from "@/lib/payment-config";
 
 interface RegistrationSectionProps {
   initialProgram?: string;
@@ -75,7 +76,7 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
       // 2) Ask backend to create a FAPSHI payment and return checkout URL (amount: 100 XAF)
       const pay = await api.createFapshiPayment({ 
         registration_id: regId, 
-        amount_cents: 100, 
+        amount_cents: PAYMENT_CONFIG.REGISTRATION_FEE_XAF, 
         currency: "XAF", 
         phone: formData.phone || undefined,
         email: formData.email 
@@ -375,7 +376,7 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
                 </div>
 
                 {/* duplicate education level removed */}
-                <div className="text-sm text-muted-foreground mb-2">Registration fee: <span className="font-semibold text-foreground">100 XAF</span> — you'll be redirected to secure checkout to complete payment.</div>
+                <div className="text-sm text-muted-foreground mb-2">Registration fee: <span className="font-semibold text-foreground">{formatAmount(PAYMENT_CONFIG.REGISTRATION_FEE_XAF)} XAF</span> — you'll be redirected to secure checkout to complete payment.</div>
                 <Button 
                   type="submit" 
                   variant={isSubmitting ? "submitting" : "default"}
@@ -407,7 +408,7 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
                     fullName: formData.fullName,
                     email: formData.email,
                     program: formData.program,
-                    amount: 100,
+                    amount: PAYMENT_CONFIG.REGISTRATION_FEE_XAF,
                     transId: paymentId || 'N/A',
                     date: new Date().toLocaleDateString()
                   })}
