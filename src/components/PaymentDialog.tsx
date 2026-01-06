@@ -174,7 +174,7 @@ export const PaymentDialog = ({
           <div className="p-6">
             <DialogHeader>
               <DialogTitle className="text-2xl">
-                Application Fee: 1,00XAF
+                Application Fee: 100 XAF
               </DialogTitle>
               <DialogDescription className="text-base">
                 This fee supports internet access and essential training materials.<br />
@@ -194,7 +194,7 @@ export const PaymentDialog = ({
                           <Smartphone className="w-6 h-6 text-white" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-bold text-lg text-foreground">Pay 1,00XAF Now</h3>
+                          <h3 className="font-bold text-lg text-foreground">Pay 100 XAF Now</h3>
                           <p className="text-muted-foreground text-sm">Mobile Money (MTN / Orange)</p>
                           <p className="text-muted-foreground text-sm">Instant payment confirmation</p>
                         </div>
@@ -235,7 +235,7 @@ export const PaymentDialog = ({
                     <div className="border-t pt-3 mt-3">
                       <div className="flex justify-between items-center">
                         <span className="text-lg font-semibold">Total Amount</span>
-                        <span className="text-2xl font-bold text-primary">1,00XAF</span>
+                        <span className="text-2xl font-bold text-primary">100 XAF</span>
                       </div>
                     </div>
                   </CardContent>
@@ -260,7 +260,7 @@ export const PaymentDialog = ({
                     Back
                   </Button>
                   <Button onClick={handlePayment} className="flex-1" disabled={isProcessing}>
-                    {isProcessing ? "Opening Payment..." : "Pay 1,00XAF"}
+                    {isProcessing ? "Opening Payment..." : "Pay 100 XAF"}
                   </Button>
                 </div>
                 

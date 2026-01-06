@@ -270,7 +270,7 @@ export const AmbassadorPortal = () => {
                 </div>
               </div>
               <div className="mt-4 text-xs text-muted-foreground">
-                Earnings: {recommendations.filter(r => r.status === 'completed' || r.status === 'approved').length * 500} XAF
+                Earnings: {recommendations.filter(r => r.status === 'completed' || r.status === 'approved').length * 50} XAF
               </div>
             </CardContent>
           </Card>
@@ -360,7 +360,7 @@ export const AmbassadorPortal = () => {
                 </div>
                 <div className="flex gap-3">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-xs font-bold text-primary">2</div>
-                  <p className="text-sm">When they pay their 1,00XAF registration fee, your balance increases by 500 XAF.</p>
+                  <p className="text-sm">When they pay their 100 XAF registration fee, your balance increases by 50 XAF.</p>
                 </div>
                 <div className="flex gap-3">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-xs font-bold text-primary">3</div>

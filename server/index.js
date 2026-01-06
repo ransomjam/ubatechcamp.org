@@ -122,8 +122,8 @@ async function processRecommendationPayout(transId) {
       return;
     }
 
-    // 4. Update the balance (Ambassador: 500 XAF, Tutor: 1000 XAF)
-    const amountToCredit = type === 'tutor' ? 1000 : 500;
+    // 4. Update the balance (Referral: 50 XAF)
+    const amountToCredit = 50;
     const newBalance = Number(person.balance_cents || 0) + amountToCredit;
     
     const { error: uError } = await supabase

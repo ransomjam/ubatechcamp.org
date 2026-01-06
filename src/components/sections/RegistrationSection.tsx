@@ -375,7 +375,7 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
                 </div>
 
                 {/* duplicate education level removed */}
-                <div className="text-sm text-muted-foreground mb-2">Registration fee: <span className="font-semibold text-foreground">1,00XAF</span> — you'll be redirected to secure checkout to complete payment.</div>
+                <div className="text-sm text-muted-foreground mb-2">Registration fee: <span className="font-semibold text-foreground">100 XAF</span> — you'll be redirected to secure checkout to complete payment.</div>
                 <Button 
                   type="submit" 
                   variant={isSubmitting ? "submitting" : "default"}
