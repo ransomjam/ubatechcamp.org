@@ -180,7 +180,13 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
       if (checkoutWindow && !checkoutWindow.closed) {
         checkoutWindow.close();
       }
-      toast.error(err?.message || "Failed to start registration/payment. Please try again.");
+      
+      // Handle CORS errors specifically
+      if (err?.message?.includes('Failed to fetch') || err?.name === 'TypeError') {
+        toast.error("Connection error: Please check your internet connection or try again later. If the issue persists, contact support.");
+      } else {
+        toast.error(err?.message || "Failed to start registration/payment. Please try again.");
+      }
       setIsSubmitting(false);
     }
   };

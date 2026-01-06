@@ -10,7 +10,8 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:8080',
   'https://www.ubatechcamp.org',
-  'https://ubatechcamp.org'
+  'https://ubatechcamp.org',
+  'https://ubatechcamp-org.vercel.app',
 ];
 
 app.use(cors({
