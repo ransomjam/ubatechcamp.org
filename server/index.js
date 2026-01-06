@@ -44,17 +44,20 @@ app.use((req, res, next) => {
   next();
 });
 
-const FAPSHI_BASE = (process.env.FAPSHI_BASE_URL || 'https://sandbox.fapshi.com').trim();
+const FAPSHI_APIUSER = (process.env.FAPSHI_APIUSER || 'f3b6d10d-c2a7-458b-9103-69b1b9dac9de').trim();
+const FAPSHI_APIKEY = (process.env.FAPSHI_APIKEY || 'FAK_b420884db921b0bba76184ff6dbbaa78').trim();
+const FAPSHI_BASE = (process.env.FAPSHI_BASE_URL || 'https://sandbox.fapshi.com').trim().replace(/\/$/, '');
+
 const FAPSHI_HEADERS = {
-  apiuser: (process.env.FAPSHI_APIUSER || '').trim(),
-  apikey: (process.env.FAPSHI_APIKEY || '').trim()
+  'apiuser': FAPSHI_APIUSER,
+  'apikey': FAPSHI_APIKEY,
+  'Content-Type': 'application/json'
 };
 
 // Log configuration status on startup
 console.log('--- Configuration Status ---');
 console.log('FAPSHI_BASE_URL:', FAPSHI_BASE);
-console.log('FAPSHI_APIUSER:', FAPSHI_HEADERS.apiuser ? 'Set' : 'f3b6d10d-c2a7-458b-9103-69b1b9dac9de');
-console.log('FAPSHI_APIKEY:', FAPSHI_HEADERS.apikey ? 'Set' : 'FAK_b420884db921b0bba76184ff6dbbaa78)');
+console.log('FAPSHI_APIUSER:', FAPSHI_APIUSER);
 console.log('FRONTEND_URL:', process.env.FRONTEND_URL || 'https://www.ubatechcamp.org');
 console.log('---------------------------');
 
