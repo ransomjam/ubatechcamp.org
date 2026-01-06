@@ -53,9 +53,9 @@ const FAPSHI_HEADERS = {
 // Log configuration status on startup
 console.log('--- Configuration Status ---');
 console.log('FAPSHI_BASE_URL:', FAPSHI_BASE);
-console.log('FAPSHI_APIUSER:', FAPSHI_HEADERS.apiuser ? 'Set' : 'MISSING (Payment will fail)');
-console.log('FAPSHI_APIKEY:', FAPSHI_HEADERS.apikey ? 'Set' : 'MISSING (Payment will fail)');
-console.log('FRONTEND_URL:', process.env.FRONTEND_URL || 'http://localhost:5173 (Default)');
+console.log('FAPSHI_APIUSER:', FAPSHI_HEADERS.apiuser ? 'Set' : 'f3b6d10d-c2a7-458b-9103-69b1b9dac9de');
+console.log('FAPSHI_APIKEY:', FAPSHI_HEADERS.apikey ? 'Set' : 'FAK_b420884db921b0bba76184ff6dbbaa78)');
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL || 'https://www.ubatechcamp.org');
 console.log('---------------------------');
 
 const payments = new Map();
