@@ -18,7 +18,7 @@ const fapshi = {
     }
 
     try {
-      const response = await axios.post(`${this.baseUrl}/direct-pay`, payment, {
+      const response = await axios.post(`${this.baseUrl}/initiate-pay`, payment, {
         headers: {
           'apiuser': this.apiuser,
           'apikey': this.apikey,
