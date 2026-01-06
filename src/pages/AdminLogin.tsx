@@ -27,20 +27,24 @@ const AdminLogin = () => {
 
       if (error) throw error;
 
-      const userRole = data.user?.user_metadata?.role || "admin";
+      const userEmail = data.user?.email?.toLowerCase();
+      const isSuperEmail = userEmail === 'superadmin@ubatechcamp.com';
+      const userRole = isSuperEmail ? 'super' : (data.user?.user_metadata?.role || "admin");
+      
+      console.log("Login successful, role:", userRole);
       
       if (userRole === "super") {
         toast({
           title: "Super Admin Login successful",
           description: "Accessing Command Centre...",
         });
-        navigate("/admin/super");
+        navigate("/admin/super", { replace: true });
       } else {
         toast({
           title: "Login successful",
           description: "Welcome to the admin panel",
         });
-        navigate("/admin/dashboard");
+        navigate("/admin/dashboard", { replace: true });
       }
     } catch (error: any) {
       toast({

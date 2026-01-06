@@ -21,7 +21,20 @@ const AdminDashboard = () => {
         navigate("/admin/login");
         return;
       }
-      setUserRole(session.user.user_metadata?.role || "admin");
+      const userEmail = session.user.email?.toLowerCase();
+      const isSuperEmail = userEmail === 'superadmin@ubatechcamp.com';
+      const role = isSuperEmail ? 'super' : (session.user.user_metadata?.role || "admin");
+      setUserRole(role);
+      
+      // Auto-redirect super admin to their dedicated panel unless they specifically chose to view the admin dashboard
+      const searchParams = new URLSearchParams(window.location.search);
+      const isViewingAdmin = searchParams.get('view') === 'admin';
+      
+      if (role === 'super' && !isViewingAdmin) {
+        navigate('/admin/super', { replace: true });
+        return;
+      }
+      
       setLoading(false);
     };
     checkAuth();

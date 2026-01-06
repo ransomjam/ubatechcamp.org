@@ -21,7 +21,8 @@ RETURNS BOOLEAN AS $$
 BEGIN
   RETURN (
     auth.jwt() -> 'user_metadata' ->> 'role' = 'admin' OR 
-    auth.jwt() -> 'user_metadata' ->> 'role' = 'super'
+    auth.jwt() -> 'user_metadata' ->> 'role' = 'super' OR
+    LOWER(auth.jwt() ->> 'email') = 'superadmin@ubatechcamp.com'
   );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -29,60 +30,88 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION is_super_admin() 
 RETURNS BOOLEAN AS $$
 BEGIN
-  RETURN (auth.jwt() -> 'user_metadata' ->> 'role' = 'super');
+  RETURN (
+    auth.jwt() -> 'user_metadata' ->> 'role' = 'super' OR
+    LOWER(auth.jwt() ->> 'email') = 'superadmin@ubatechcamp.com'
+  );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- 2. Public Tables (Allow public INSERT, Admin SELECT/ALL)
 -- Registrations
+DROP POLICY IF EXISTS "Anyone can register" ON registrations;
+DROP POLICY IF EXISTS "Admins can manage registrations" ON registrations;
 CREATE POLICY "Anyone can register" ON registrations FOR INSERT WITH CHECK (true);
 CREATE POLICY "Admins can manage registrations" ON registrations FOR ALL USING (is_admin());
 
 -- Volunteer Applications
+DROP POLICY IF EXISTS "Anyone can apply" ON volunteer_applications;
+DROP POLICY IF EXISTS "Admins can manage volunteers" ON volunteer_applications;
 CREATE POLICY "Anyone can apply" ON volunteer_applications FOR INSERT WITH CHECK (true);
 CREATE POLICY "Admins can manage volunteers" ON volunteer_applications FOR ALL USING (is_admin());
 
 -- Contact Messages
+DROP POLICY IF EXISTS "Anyone can send message" ON contact_messages;
+DROP POLICY IF EXISTS "Admins can read messages" ON contact_messages;
 CREATE POLICY "Anyone can send message" ON contact_messages FOR INSERT WITH CHECK (true);
 CREATE POLICY "Admins can read messages" ON contact_messages FOR SELECT USING (is_admin());
 
 -- Newsletter
+DROP POLICY IF EXISTS "Anyone can subscribe" ON newsletter_subscriptions;
+DROP POLICY IF EXISTS "Admins can manage newsletter" ON newsletter_subscriptions;
 CREATE POLICY "Anyone can subscribe" ON newsletter_subscriptions FOR INSERT WITH CHECK (true);
 CREATE POLICY "Admins can manage newsletter" ON newsletter_subscriptions FOR ALL USING (is_admin());
 
 -- Onboarding
+DROP POLICY IF EXISTS "Anyone can submit onboarding" ON onboarding_forms;
+DROP POLICY IF EXISTS "Admins can manage onboarding" ON onboarding_forms;
 CREATE POLICY "Anyone can submit onboarding" ON onboarding_forms FOR INSERT WITH CHECK (true);
 CREATE POLICY "Admins can manage onboarding" ON onboarding_forms FOR ALL USING (is_admin());
 
 -- Donations
+DROP POLICY IF EXISTS "Anyone can donate" ON donations;
+DROP POLICY IF EXISTS "Admins can manage donations" ON donations;
 CREATE POLICY "Anyone can donate" ON donations FOR INSERT WITH CHECK (true);
 CREATE POLICY "Admins can manage donations" ON donations FOR ALL USING (is_admin());
 
 -- 3. Payments & Financials
 -- Payments
+DROP POLICY IF EXISTS "Anyone can record payment start" ON payments;
+DROP POLICY IF EXISTS "Admins can view payments" ON payments;
+DROP POLICY IF EXISTS "Super Admins can update/delete payments" ON payments;
 CREATE POLICY "Anyone can record payment start" ON payments FOR INSERT WITH CHECK (true); -- Required for Fapshi webhook
 CREATE POLICY "Admins can view payments" ON payments FOR SELECT USING (is_admin());
 CREATE POLICY "Super Admins can update/delete payments" ON payments FOR ALL USING (is_super_admin());
 
 -- Withdrawals
+DROP POLICY IF EXISTS "Admins can view withdrawals" ON withdrawals;
+DROP POLICY IF EXISTS "Super Admins can manage withdrawals" ON withdrawals;
 CREATE POLICY "Admins can view withdrawals" ON withdrawals FOR SELECT USING (is_admin());
 CREATE POLICY "Super Admins can manage withdrawals" ON withdrawals FOR ALL USING (is_super_admin());
 
 -- Stipends
+DROP POLICY IF EXISTS "Admins can view stipends" ON tutor_stipends;
+DROP POLICY IF EXISTS "Super Admins can manage stipends" ON tutor_stipends;
 CREATE POLICY "Admins can view stipends" ON tutor_stipends FOR SELECT USING (is_admin());
 CREATE POLICY "Super Admins can manage stipends" ON tutor_stipends FOR ALL USING (is_super_admin());
 
 -- 4. Staff & Ambassadors
 -- Ambassadors
+DROP POLICY IF EXISTS "Admins can manage ambassadors" ON ambassadors;
+DROP POLICY IF EXISTS "Staff can lookup themselves by email" ON ambassadors;
 CREATE POLICY "Admins can manage ambassadors" ON ambassadors FOR ALL USING (is_admin());
 -- Allow ambassadors to see their own data? (Currently handled by email-lookup in frontend)
 -- For tighter security, staff should login via Supabase Auth.
 CREATE POLICY "Staff can lookup themselves by email" ON ambassadors FOR SELECT USING (true); -- Placeholder
 
 -- Tutors (Staff/Executives)
+DROP POLICY IF EXISTS "Admins can manage tutors" ON tutors;
+DROP POLICY IF EXISTS "Staff can lookup themselves" ON tutors;
 CREATE POLICY "Admins can manage tutors" ON tutors FOR ALL USING (is_admin());
 CREATE POLICY "Staff can lookup themselves" ON tutors FOR SELECT USING (true); -- Placeholder
 
 -- 5. Programs
+DROP POLICY IF EXISTS "Public can view programs" ON programs;
+DROP POLICY IF EXISTS "Admins can edit programs" ON programs;
 CREATE POLICY "Public can view programs" ON programs FOR SELECT USING (true);
 CREATE POLICY "Admins can edit programs" ON programs FOR ALL USING (is_admin());

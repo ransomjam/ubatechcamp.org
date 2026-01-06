@@ -85,7 +85,11 @@ const SuperAdmin = () => {
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session || session.user.user_metadata?.role !== "super") {
+      const userEmail = session?.user?.email?.toLowerCase();
+      const isSuperEmail = userEmail === 'superadmin@ubatechcamp.com';
+      const isSuperRole = session?.user?.user_metadata?.role === 'super';
+      
+      if (!session || (!isSuperRole && !isSuperEmail)) {
         navigate("/admin/login");
         return;
       }
@@ -226,7 +230,7 @@ const SuperAdmin = () => {
               </p>
             </div>
             <div className="flex flex-col md:flex-row gap-3">
-               <Link to="/admin/dashboard">
+               <Link to="/admin/dashboard?view=admin">
                   <Button variant="outline" className="text-primary-foreground border-primary-foreground/30 hover:bg-white/10 w-full md:w-auto">
                     Manage Staff & Students
                   </Button>
