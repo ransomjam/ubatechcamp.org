@@ -161,6 +161,50 @@ CREATE TABLE IF NOT EXISTS payments (
 );
 CREATE INDEX IF NOT EXISTS idx_payments_registration_id ON payments(registration_id);
 
+-- Ambassadors table
+CREATE TABLE IF NOT EXISTS ambassadors (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  full_name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  phone TEXT,
+  balance_cents BIGINT DEFAULT 0,
+  status TEXT DEFAULT 'pending',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+-- Add recommendation_code column if it doesn't exist
+ALTER TABLE ambassadors ADD COLUMN IF NOT EXISTS recommendation_code TEXT;
+-- Add unique constraint safely
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ambassadors_recommendation_code_key') THEN
+    ALTER TABLE ambassadors ADD CONSTRAINT ambassadors_recommendation_code_key UNIQUE (recommendation_code);
+  END IF;
+END $$;
+CREATE INDEX IF NOT EXISTS idx_ambassadors_email ON ambassadors(lower(email));
+CREATE INDEX IF NOT EXISTS idx_ambassadors_recommendation_code ON ambassadors(recommendation_code);
+
+-- Tutors table
+CREATE TABLE IF NOT EXISTS tutors (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  full_name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  phone TEXT,
+  balance_cents BIGINT DEFAULT 0,
+  status TEXT DEFAULT 'pending',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+-- Add recommendation_code column if it doesn't exist
+ALTER TABLE tutors ADD COLUMN IF NOT EXISTS recommendation_code TEXT;
+-- Add unique constraint safely
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tutors_recommendation_code_key') THEN
+    ALTER TABLE tutors ADD CONSTRAINT tutors_recommendation_code_key UNIQUE (recommendation_code);
+  END IF;
+END $$;
+CREATE INDEX IF NOT EXISTS idx_tutors_email ON tutors(lower(email));
+CREATE INDEX IF NOT EXISTS idx_tutors_recommendation_code ON tutors(recommendation_code);
+
 -- Programs lookup table (seeded from frontend `Our Programs` list)
 CREATE TABLE IF NOT EXISTS programs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -182,6 +226,12 @@ VALUES
   ('Networking', '4 weeks', 'Computer networks, routers and networking fundamentals'),
   ('Linux Administration', '4 weeks', 'Introduction to Linux and Command Line')
 ON CONFLICT (name) DO NOTHING;
+
+CREATE OR REPLACE TRIGGER trg_ambassadors_updated_at
+BEFORE UPDATE ON ambassadors FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE OR REPLACE TRIGGER trg_tutors_updated_at
+BEFORE UPDATE ON tutors FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- Triggers to update updated_at
 CREATE OR REPLACE TRIGGER trg_registrations_updated_at
@@ -210,6 +260,6 @@ ALTER TABLE registrations ADD COLUMN IF NOT EXISTS mode_of_attendance TEXT;
 -- column rename/compatibility errors when running against existing DBs.
 DROP VIEW IF EXISTS recent_registrations;
 CREATE VIEW recent_registrations AS
-SELECT id, full_name, email, school_faculty, field_of_study, mode_of_attendance, program, status, created_at FROM registrations ORDER BY created_at DESC LIMIT 100;
+SELECT id, full_name, email, school_faculty, field_of_study, mode_of_attendance, program, status, created_at FROM registrations ORDER BY created_at DESC LIMIT 5000;
 
 -- End of schema

@@ -21,7 +21,7 @@ export const generateInvoice = (data: InvoiceData) => {
     success: [34, 197, 94] as [number, number, number],   // Green
     bgLight: [248, 250, 252] as [number, number, number], // Light Slate
     textMain: [30, 41, 59] as [number, number, number],   // Dark Slate
-    textMuted: [100, 116, 139] as [number, number, number]// Slate-500
+    textMuted: [5000, 116, 139] as [number, number, number]// Slate-500
   };
 
   // 1. HEADER SECTION (WHITE BACKGROUND)
@@ -94,7 +94,7 @@ export const generateInvoice = (data: InvoiceData) => {
 
   // 4. TABLE SECTION
   autoTable(doc, {
-    startY: 100,
+    startY: 5000,
     head: [['TRANS ID', 'DESCRIPTION', 'QTY', 'TOTAL (XAF)']],
     body: [
       [

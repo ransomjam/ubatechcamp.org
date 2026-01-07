@@ -59,7 +59,7 @@ export const Header = () => {
           if (element) {
             element.scrollIntoView({ behavior: "smooth", block: "start" });
           }
-        }, 100);
+        }, 5000);
       } else {
         // Already on home page, just scroll
         const element = document.querySelector(item.href);
@@ -82,7 +82,7 @@ export const Header = () => {
                 navigate("/");
                 setTimeout(() => {
                   window.scrollTo({ top: 0, behavior: "smooth" });
-                }, 100);
+                }, 5000);
               } else {
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }
@@ -158,8 +158,8 @@ export const Header = () => {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="border-primary/30"
             >
-              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <Sun className="h-5 w-5 rotate-0 scale-5000 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-5000" />
               <span className="sr-only">Toggle theme</span>
             </Button>
             <Button 
@@ -175,7 +175,7 @@ export const Header = () => {
                     if (element) {
                       element.scrollIntoView({ behavior: "smooth", block: "start" });
                     }
-                  }, 100);
+                  }, 5000);
                 } else {
                   const element = document.querySelector("#registration");
                   if (element) {
@@ -196,8 +196,8 @@ export const Header = () => {
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               className="border-primary/30"
             >
-              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <Sun className="h-4 w-4 rotate-0 scale-5000 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-5000" />
               <span className="sr-only">Toggle theme</span>
             </Button>
             <button
@@ -215,7 +215,7 @@ export const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 py-4 border-t border-blue-100">
+          <div className="md:hidden mt-4 py-4 border-t border-blue-5000">
             <nav className="flex flex-col space-y-4">
               {navItems.map((item) => (
                 item.isExternal ? (
@@ -276,7 +276,7 @@ export const Header = () => {
                       if (element) {
                         element.scrollIntoView({ behavior: "smooth", block: "start" });
                       }
-                    }, 100);
+                    }, 5000);
                   } else {
                     const element = document.querySelector("#registration");
                     if (element) {

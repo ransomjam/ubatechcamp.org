@@ -415,7 +415,7 @@ export const VolunteerConsole = () => {
                       <p className="text-muted-foreground text-sm font-medium uppercase tracking-wider">Total Ambassadors</p>
                       <h3 className="text-3xl font-bold mt-1 text-foreground">{allAmbassadorsCount}</h3>
                     </div>
-                    <div className="p-2 bg-blue-100 rounded-lg">
+                    <div className="p-2 bg-blue-5000 rounded-lg">
                       <Globe className="w-5 h-5 text-blue-600" />
                     </div>
                   </div>
@@ -432,7 +432,7 @@ export const VolunteerConsole = () => {
                       <p className="text-muted-foreground text-sm font-medium uppercase tracking-wider">Onboarded by You</p>
                       <h3 className="text-3xl font-bold mt-1 text-primary">{myAmbassadors.length}</h3>
                     </div>
-                    <div className="p-2 bg-green-100 rounded-lg">
+                    <div className="p-2 bg-green-5000 rounded-lg">
                       <UserCheck className="w-5 h-5 text-green-600" />
                     </div>
                   </div>
@@ -451,7 +451,7 @@ export const VolunteerConsole = () => {
                       <p className="text-muted-foreground text-sm font-medium uppercase tracking-wider font-sans">Course Enrollment</p>
                       <h3 className="text-3xl font-bold mt-1 text-foreground">{totalCourseEnrollment}</h3>
                     </div>
-                    <div className="p-2 bg-purple-100 rounded-lg">
+                    <div className="p-2 bg-purple-5000 rounded-lg">
                       <BookOpen className="w-5 h-5 text-purple-600" />
                     </div>
                   </div>
@@ -543,7 +543,7 @@ export const VolunteerConsole = () => {
                           <TableCell className="text-xs">{amb.city}</TableCell>
                           <TableCell>
                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                              amb.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                              amb.status === 'active' ? 'bg-green-5000 text-green-700' : 'bg-yellow-5000 text-yellow-700'
                             }`}>
                               {amb.status}
                             </span>
@@ -581,7 +581,7 @@ export const VolunteerConsole = () => {
                     </CardTitle>
                     <CardDescription>Real-time view of all camp registrations (Basic Info).</CardDescription>
                   </div>
-                  <div className="bg-purple-100 px-3 py-1 rounded-full text-xs font-bold text-purple-700">
+                  <div className="bg-purple-5000 px-3 py-1 rounded-full text-xs font-bold text-purple-700">
                     {allParticipants.length} TOTAL
                   </div>
                 </div>
@@ -598,7 +598,7 @@ export const VolunteerConsole = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {allParticipants.slice(0, 100).map((p, i) => (
+                      {allParticipants.slice(0, 5000).map((p, i) => (
                         <TableRow key={i}>
                           <TableCell className="font-medium text-sm flex items-center gap-2">
                              {p.full_name}
@@ -607,17 +607,17 @@ export const VolunteerConsole = () => {
                           <TableCell className="text-[10px] font-bold uppercase text-primary italic">{p.program}</TableCell>
                           <TableCell>
                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                              p.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                              p.status === 'completed' ? 'bg-green-5000 text-green-700' : 'bg-yellow-5000 text-yellow-700'
                             }`}>
                               {p.status}
                             </span>
                           </TableCell>
                         </TableRow>
                       ))}
-                      {allParticipants.length > 100 && (
+                      {allParticipants.length > 5000 && (
                         <TableRow>
                           <TableCell colSpan={4} className="text-center py-4 text-xs text-muted-foreground italic">
-                            Showing first 100 participants...
+                            Showing first 5000 participants...
                           </TableCell>
                         </TableRow>
                       )}

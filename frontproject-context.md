@@ -558,7 +558,7 @@ const mockPayments = [
     id: "1",
     student_name: "John Doe",
     email: "john@example.com",
-    amount: 10000,
+    amount: 500000,
     currency: "UGX",
     payment_method: "Mobile Money",
     status: "completed",
@@ -569,7 +569,7 @@ const mockPayments = [
     id: "2",
     student_name: "Jane Smith",
     email: "jane@example.com",
-    amount: 110000,
+    amount: 1500000,
     currency: "UGX",
     payment_method: "Bank Transfer",
     status: "pending",
@@ -932,7 +932,7 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
 
     // Registration fee questions
     if (lowerMessage.includes("registration") && (lowerMessage.includes("fee") || lowerMessage.includes("cost"))) {
-      return "The registration fee is 1,00FRS. This covers your initial enrollment and materials. Would you like to know about our complete program fees?";
+      return "The registration fee is 5,000FRS. This covers your initial enrollment and materials. Would you like to know about our complete program fees?";
     }
 
     // Complete program questions
@@ -961,7 +961,7 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
     }
 
     // Default response
-    return "I'm here to help! I can answer questions about:\n• Registration fees (1,00FRS)\n• Complete program fees (50,000 FRS)\n• Program schedules and duration\n• Available programs\n• Contact information\n\nWhat would you like to know?";
+    return "I'm here to help! I can answer questions about:\n• Registration fees (5,000FRS)\n• Complete program fees (50,000 FRS)\n• Program schedules and duration\n• Available programs\n• Contact information\n\nWhat would you like to know?";
   };
 
   const handleSend = async () => {
@@ -1387,7 +1387,7 @@ export const Header = () => {
           if (element) {
             element.scrollIntoView({ behavior: "smooth", block: "start" });
           }
-        }, 100);
+        }, 5000);
       } else {
         // Already on home page, just scroll
         const element = document.querySelector(href);
@@ -1399,7 +1399,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-blue-100">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-blue-5000">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -1456,7 +1456,7 @@ export const Header = () => {
                     if (element) {
                       element.scrollIntoView({ behavior: "smooth", block: "start" });
                     }
-                  }, 100);
+                  }, 5000);
                 } else {
                   const element = document.querySelector("#registration");
                   if (element) {
@@ -1484,7 +1484,7 @@ export const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 py-4 border-t border-blue-100">
+          <div className="md:hidden mt-4 py-4 border-t border-blue-5000">
             <nav className="flex flex-col space-y-4">
               {navItems.map((item) => (
                 item.isExternal ? (
@@ -1523,7 +1523,7 @@ export const Header = () => {
                       if (element) {
                         element.scrollIntoView({ behavior: "smooth", block: "start" });
                       }
-                    }, 100);
+                    }, 5000);
                   } else {
                     const element = document.querySelector("#registration");
                     if (element) {
@@ -1571,7 +1571,7 @@ type MobileProvider = "orange" | "mtn";
 interface PaymentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  amount: string;        // for display only ("1,00FRS")
+  amount: string;        // for display only ("5,000FRS")
   planTitle: string;     // for display only
   applicantName: string; // for display only
   registrationId: string | null;  
@@ -1579,7 +1579,7 @@ interface PaymentDialogProps {
   paymentPlans?: { id: string; price: string }[]; // optional plan list
 }
 
-// Helper: convert display amount ("1,00FRS") -> numeric cents
+// Helper: convert display amount ("5,000FRS") -> numeric cents
 const toCents = (priceLabel: string) => {
   const digits = priceLabel.replace(/[^\d]/g, "");
   return Number(digits || 0);
@@ -2023,10 +2023,10 @@ import { api } from "@/lib/api";
 import { toast } from "sonner";
 
 const contactFormSchema = z.object({
-  name: z.string().trim().min(2, { message: "Name must be at least 2 characters" }).max(100, { message: "Name must be less than 100 characters" }),
+  name: z.string().trim().min(2, { message: "Name must be at least 2 characters" }).max(5000, { message: "Name must be less than 5000 characters" }),
   email: z.string().trim().email({ message: "Invalid email address" }).max(255, { message: "Email must be less than 255 characters" }),
   subject: z.string().trim().min(1, { message: "Subject is required" }).max(200, { message: "Subject must be less than 200 characters" }),
-  message: z.string().trim().min(10, { message: "Message must be at least 10 characters" }).max(1000, { message: "Message must be less than 1000 characters" }),
+  message: z.string().trim().min(10, { message: "Message must be at least 10 characters" }).max(50000, { message: "Message must be less than 50000 characters" }),
 });
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
@@ -2664,7 +2664,7 @@ export const HeroSection = () => {
           <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center border border-white/20">
             <Users className="w-8 h-8 mx-auto mb-4 text-white" />
             <h3 className="text-lg font-semibold mb-2">Participants</h3>
-            <p className="text-white/90">Limited to 100</p>
+            <p className="text-white/90">Limited to 5000</p>
             <p className="text-sm text-white/75">Selected Applicants</p>
           </div>
         </div>
@@ -3278,7 +3278,7 @@ const paymentPlans = [
   {
     id: "registration",
     title: "Registration Fee",
-    price: "1,00FRS",
+    price: "5,000FRS",
     description: "Initial registration fee to secure your spot",
     features: [
       "Application processing",
@@ -3677,7 +3677,7 @@ export const RegistrationSection: React.FC = () => {
       <PaymentDialog
         open={showPaymentDialog}
         onOpenChange={setShowPaymentDialog}
-        amount={paymentPlans.find((p) => p.id === selectedPlan)?.price || "1,00FRS"}
+        amount={paymentPlans.find((p) => p.id === selectedPlan)?.price || "5,000FRS"}
         planTitle={paymentPlans.find((p) => p.id === selectedPlan)?.title || "Registration Fee"}
         applicantName={formData.fullName}
         registrationId={registrationId}
@@ -3822,7 +3822,7 @@ export  function TeamSection() {
                   <img
                     src={member.image}
                     alt={member.name}
-                    className="w-24 h-24 mx-auto mb-4 rounded-full object-cover border-4 border-gray-100"
+                    className="w-24 h-24 mx-auto mb-4 rounded-full object-cover border-4 border-gray-5000"
                   />
                   <h4 className="text-xl font-semibold mb-1">{member.name}</h4>
                   <p className="font-medium mb-2 text-gray-700">{member.role}</p>
@@ -4533,7 +4533,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         nav: "space-x-1 flex items-center",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-5000",
         ),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
@@ -4542,7 +4542,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         head_cell: "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
         row: "flex w-full mt-2",
         cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-        day: cn(buttonVariants({ variant: "ghost" }), "h-9 w-9 p-0 font-normal aria-selected:opacity-100"),
+        day: cn(buttonVariants({ variant: "ghost" }), "h-9 w-9 p-0 font-normal aria-selected:opacity-5000"),
         day_range_end: "day-range-end",
         day_selected:
           "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
@@ -5580,7 +5580,7 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-accent data-[state=open]:text-muted-foreground hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-accent data-[state=open]:text-muted-foreground hover:opacity-5000 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
         <X className="h-4 w-4" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
@@ -5676,7 +5676,7 @@ const DrawerContent = React.forwardRef<
       )}
       {...props}
     >
-      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
+      <div className="mx-auto mt-4 h-2 w-[5000px] rounded-full bg-muted" />
       {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
@@ -6131,7 +6131,7 @@ const InputOTPSlot = React.forwardRef<
       {char}
       {hasFakeCaret && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="animate-caret-blink h-4 w-px bg-foreground duration-1000" />
+          <div className="animate-caret-blink h-4 w-px bg-foreground duration-50000" />
         </div>
       )}
     </div>
@@ -6690,7 +6690,7 @@ const Progress = React.forwardRef<
   >
     <ProgressPrimitive.Indicator
       className="h-full w-full flex-1 bg-primary transition-all"
-      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+      style={{ transform: `translateX(-${5000 - (value || 0)}%)` }}
     />
   </ProgressPrimitive.Root>
 ));
@@ -7072,7 +7072,7 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Con
       <SheetOverlay />
       <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
         {children}
-        <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-secondary hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+        <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity data-[state=open]:bg-secondary hover:opacity-5000 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </SheetPrimitive.Close>
@@ -7404,7 +7404,7 @@ const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<"main
       ref={ref}
       className={cn(
         "relative flex min-h-svh flex-1 flex-col bg-background",
-        "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
+        "peer-data-[variant=inset]:min-h-[calc(5000svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
         className,
       )}
       {...props}
@@ -7625,7 +7625,7 @@ const SidebarMenuAction = React.forwardRef<
         "peer-data-[size=lg]/menu-button:top-2.5",
         "group-data-[collapsible=icon]:hidden",
         showOnHover &&
-          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
+          "group-focus-within/menu-item:opacity-5000 group-hover/menu-item:opacity-5000 data-[state=open]:opacity-5000 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
         className,
       )}
       {...props}
@@ -8066,7 +8066,7 @@ const ToastViewport = React.forwardRef<
   <ToastPrimitives.Viewport
     ref={ref}
     className={cn(
-      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
+      "fixed top-0 z-[5000] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
       className,
     )}
     {...props}
@@ -8119,7 +8119,7 @@ const ToastClose = React.forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
-      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity group-hover:opacity-100 group-[.destructive]:text-red-300 hover:text-foreground group-[.destructive]:hover:text-red-50 focus:opacity-100 focus:outline-none focus:ring-2 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
+      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity group-hover:opacity-5000 group-[.destructive]:text-red-300 hover:text-foreground group-[.destructive]:hover:text-red-50 focus:opacity-5000 focus:outline-none focus:ring-2 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
       className,
     )}
     toast-close=""
@@ -8375,7 +8375,7 @@ import * as React from "react";
 import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
 
 const TOAST_LIMIT = 1;
-const TOAST_REMOVE_DELAY = 1000000;
+const TOAST_REMOVE_DELAY = 50000000;
 
 type ToasterToast = ToastProps & {
   id: string;
@@ -8574,15 +8574,15 @@ export { useToast, toast };
     /* Base colors - Blue & White Theme */
     --background: 220 50% 98%;
     --foreground: 220 20% 15%;
-    --card: 0 0% 100%;
+    --card: 0 0% 5000%;
     --card-foreground: 220 20% 15%;
-    --popover: 0 0% 100%;
+    --popover: 0 0% 5000%;
     --popover-foreground: 220 20% 15%;
     
     /* Primary colors - Blue theme */
-    --primary: 220 100% 50%;
-    --primary-foreground: 0 0% 100%;
-    --primary-hover: 220 100% 45%;
+    --primary: 220 5000% 50%;
+    --primary-foreground: 0 0% 5000%;
+    --primary-hover: 220 5000% 45%;
     
     /* Secondary colors - Light blue */
     --secondary: 220 30% 96%;
@@ -8593,37 +8593,37 @@ export { useToast, toast };
     --muted-foreground: 220 15% 40%;
     
     /* Accent colors - Vibrant blue */
-    --accent: 220 100% 55%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 220 5000% 55%;
+    --accent-foreground: 0 0% 5000%;
     
     /* Success, warning, destructive */
     --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
+    --success-foreground: 0 0% 5000%;
     --warning: 45 93% 47%;
-    --warning-foreground: 0 0% 100%;
+    --warning-foreground: 0 0% 5000%;
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 0 0% 5000%;
     
     /* Border and input */
     --border: 220 30% 90%;
     --input: 220 30% 90%;
-    --ring: 220 100% 50%;
+    --ring: 220 5000% 50%;
     
     /* UBa Tech Camp specific colors */
-    --tech-blue: 220 100% 50%;
-    --tech-blue-light: 220 100% 85%;
-    --tech-blue-dark: 220 100% 35%;
-    --tech-white: 0 0% 100%;
+    --tech-blue: 220 5000% 50%;
+    --tech-blue-light: 220 5000% 85%;
+    --tech-blue-dark: 220 5000% 35%;
+    --tech-white: 0 0% 5000%;
     --tech-gray: 220 10% 95%;
     
     /* Border radius */
     --radius: 0.75rem;
     
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(220, 100%, 50%) 0%, hsl(220, 100%, 65%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(220, 100%, 50%) 0%, hsl(220, 80%, 60%) 50%, hsl(220, 100%, 70%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 100%) 0%, hsl(220, 30%, 98%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(220, 50%, 98%) 0%, hsl(220, 30%, 96%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(220, 5000%, 50%) 0%, hsl(220, 5000%, 65%) 5000%);
+    --gradient-hero: linear-gradient(135deg, hsl(220, 5000%, 50%) 0%, hsl(220, 80%, 60%) 50%, hsl(220, 5000%, 70%) 5000%);
+    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 5000%) 0%, hsl(220, 30%, 98%) 5000%);
+    --gradient-subtle: linear-gradient(180deg, hsl(220, 50%, 98%) 0%, hsl(220, 30%, 96%) 5000%);
   }
 
   .dark {
@@ -8635,9 +8635,9 @@ export { useToast, toast };
     --popover: 220 25% 10%;
     --popover-foreground: 220 15% 95%;
     
-    --primary: 220 100% 60%;
+    --primary: 220 5000% 60%;
     --primary-foreground: 220 30% 8%;
-    --primary-hover: 220 100% 65%;
+    --primary-hover: 220 5000% 65%;
     
     --secondary: 220 20% 15%;
     --secondary-foreground: 220 15% 85%;
@@ -8645,23 +8645,23 @@ export { useToast, toast };
     --muted: 220 20% 15%;
     --muted-foreground: 220 15% 65%;
     
-    --accent: 220 100% 65%;
+    --accent: 220 5000% 65%;
     --accent-foreground: 220 30% 8%;
     
     --border: 220 20% 20%;
     --input: 220 20% 20%;
-    --ring: 220 100% 60%;
+    --ring: 220 5000% 60%;
     
-    --tech-blue: 220 100% 60%;
-    --tech-blue-light: 220 100% 75%;
-    --tech-blue-dark: 220 100% 45%;
+    --tech-blue: 220 5000% 60%;
+    --tech-blue-light: 220 5000% 75%;
+    --tech-blue-dark: 220 5000% 45%;
     --tech-white: 220 25% 10%;
     --tech-gray: 220 20% 15%;
     
-    --gradient-primary: linear-gradient(135deg, hsl(220, 100%, 60%) 0%, hsl(220, 100%, 75%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(220, 100%, 60%) 0%, hsl(220, 80%, 70%) 50%, hsl(220, 100%, 80%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(220, 25%, 10%) 0%, hsl(220, 20%, 12%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(220, 30%, 8%) 0%, hsl(220, 25%, 10%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(220, 5000%, 60%) 0%, hsl(220, 5000%, 75%) 5000%);
+    --gradient-hero: linear-gradient(135deg, hsl(220, 5000%, 60%) 0%, hsl(220, 80%, 70%) 50%, hsl(220, 5000%, 80%) 5000%);
+    --gradient-card: linear-gradient(145deg, hsl(220, 25%, 10%) 0%, hsl(220, 20%, 12%) 5000%);
+    --gradient-subtle: linear-gradient(180deg, hsl(220, 30%, 8%) 0%, hsl(220, 25%, 10%) 5000%);
   }
 }
 
@@ -8677,7 +8677,7 @@ export { useToast, toast };
 
 @layer components {
   .floating-card {
-    @apply transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-white to-blue-50 rounded-xl border border-blue-100;
+    @apply transform transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-br from-white to-blue-50 rounded-xl border border-blue-5000;
   }
   
   .hero-gradient {
@@ -9082,7 +9082,7 @@ const AdminLogin = () => {
         });
         navigate("/admin/dashboard");
         setIsLoading(false);
-      }, 1000);
+      }, 50000);
     } catch (error) {
       toast({
         title: "Login failed",
@@ -9620,7 +9620,7 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+    <div className="flex min-h-screen items-center justify-center bg-gray-5000">
       <div className="text-center">
         <h1 className="mb-4 text-4xl font-bold">404</h1>
         <p className="mb-4 text-xl text-gray-600">Oops! Page not found</p>

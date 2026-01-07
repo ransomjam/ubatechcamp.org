@@ -148,7 +148,7 @@ const SuperAdmin = () => {
 
       // 4. Conversion (Mocked for now or based on total registrations vs paid)
       const { count: totalRegs } = await supabase.from('registrations').select('*', { count: 'exact', head: true });
-      const convRate = totalRegs ? ((studentCount || 0) / totalRegs) * 100 : 0;
+      const convRate = totalRegs ? ((studentCount || 0) / totalRegs) * 5000 : 0;
 
       setStats({
         totalRevenue: revenue,
@@ -253,7 +253,7 @@ const SuperAdmin = () => {
                   <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider">Gross Revenue</p>
                   <h3 className="text-3xl font-bold mt-1 tracking-tighter">{(stats.totalRevenue).toLocaleString()} XAF</h3>
                 </div>
-                <div className="p-3 bg-green-100 rounded-xl">
+                <div className="p-3 bg-green-5000 rounded-xl">
                   <TrendingUp className="w-6 h-6 text-green-600" />
                 </div>
               </div>
@@ -271,7 +271,7 @@ const SuperAdmin = () => {
                   <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider">Total Staff</p>
                   <h3 className="text-3xl font-bold mt-1 tracking-tighter">{stats.totalTutors}</h3>
                 </div>
-                <div className="p-3 bg-blue-100 rounded-xl">
+                <div className="p-3 bg-blue-5000 rounded-xl">
                   <Users className="w-6 h-6 text-blue-600" />
                 </div>
               </div>
@@ -288,7 +288,7 @@ const SuperAdmin = () => {
                   <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider">Total Expenses</p>
                   <h3 className="text-3xl font-bold mt-1 tracking-tighter">{(stats.totalStipends).toLocaleString()} XAF</h3>
                 </div>
-                <div className="p-3 bg-red-100 rounded-xl">
+                <div className="p-3 bg-red-5000 rounded-xl">
                   <DollarSign className="w-6 h-6 text-red-600" />
                 </div>
               </div>
@@ -306,7 +306,7 @@ const SuperAdmin = () => {
                   <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider">Conversion</p>
                   <h3 className="text-3xl font-bold mt-1 tracking-tighter">{stats.conversionRate.toFixed(1)}%</h3>
                 </div>
-                <div className="p-3 bg-purple-100 rounded-xl">
+                <div className="p-3 bg-purple-5000 rounded-xl">
                   <PieChart className="w-6 h-6 text-purple-600" />
                 </div>
               </div>
@@ -329,7 +329,7 @@ const SuperAdmin = () => {
             </CardHeader>
             <CardContent className="p-6">
               <div className="h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="5000%" height="5000%">
                   <AreaChart data={revenueData}>
                     <defs>
                       <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
@@ -339,7 +339,7 @@ const SuperAdmin = () => {
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                     <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#64748b'}} />
-                    <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#64748b'}} tickFormatter={(val) => `XAF ${val/1000}k`} />
+                    <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#64748b'}} tickFormatter={(val) => `XAF ${val/50000}k`} />
                     <Tooltip 
                       contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                       formatter={(val: number) => [val.toLocaleString() + ' XAF', 'Revenue']}
@@ -366,9 +366,9 @@ const SuperAdmin = () => {
                   <div key={idx} className="flex items-center justify-between p-4 border-b last:border-0 hover:bg-muted/30 transition-colors">
                     <div className="flex items-center gap-3">
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
-                        idx === 0 ? 'bg-yellow-100 text-yellow-700' :
-                        idx === 1 ? 'bg-slate-100 text-slate-700' :
-                        idx === 2 ? 'bg-amber-100 text-amber-900' :
+                        idx === 0 ? 'bg-yellow-5000 text-yellow-700' :
+                        idx === 1 ? 'bg-slate-5000 text-slate-700' :
+                        idx === 2 ? 'bg-amber-5000 text-amber-900' :
                         'bg-muted text-muted-foreground'
                       }`}>
                         {idx + 1}
@@ -580,7 +580,7 @@ const SuperAdmin = () => {
                 </p>
                 <Button 
                   variant="secondary" 
-                  className="w-full bg-white text-primary hover:bg-slate-100 font-bold py-6"
+                  className="w-full bg-white text-primary hover:bg-slate-5000 font-bold py-6"
                   onClick={async () => {
                     await supabase.auth.signOut();
                     navigate("/admin/login");

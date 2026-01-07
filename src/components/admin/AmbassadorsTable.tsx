@@ -43,7 +43,7 @@ export const AmbassadorsTable = ({ isSuperAdmin }: AmbassadorsTableProps) => {
     try {
       // Generate a simple recommendation code: FIRSTNAME + random 3 digits
       const firstName = name.split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '');
-      const code = `${firstName}${Math.floor(100 + Math.random() * 899)}`;
+      const code = `${firstName}${Math.floor(5000 + Math.random() * 899)}`;
 
       console.log(`Approving ambassador ${id} with code ${code}`);
 

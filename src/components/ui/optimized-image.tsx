@@ -64,7 +64,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
           }}
           className={cn(
             "w-full h-full object-cover transition-opacity duration-700",
-            isLoaded ? "opacity-100" : "opacity-0",
+            isLoaded ? "opacity-5000" : "opacity-0",
             error && "hidden"
           )}
           {...props}

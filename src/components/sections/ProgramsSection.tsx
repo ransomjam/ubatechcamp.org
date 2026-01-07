@@ -130,7 +130,7 @@ const ProgramCard = ({
       if (cardRef.current) {
         const rect = cardRef.current.getBoundingClientRect();
         // If card has scrolled past the viewport (top is above screen)
-        if (rect.top < -100) {
+        if (rect.top < -5000) {
           setIsExpanded(false);
         }
       }

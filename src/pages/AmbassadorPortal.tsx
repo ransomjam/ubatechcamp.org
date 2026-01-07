@@ -245,7 +245,7 @@ export const AmbassadorPortal = () => {
                   <p className="text-muted-foreground text-sm font-medium">Total Recommendations</p>
                   <h3 className="text-3xl font-bold mt-1 text-foreground">{recommendations.length}</h3>
                 </div>
-                <div className="p-2 bg-blue-100 rounded-lg">
+                <div className="p-2 bg-blue-5000 rounded-lg">
                   <Users className="w-5 h-5 text-blue-600" />
                 </div>
               </div>
@@ -265,7 +265,7 @@ export const AmbassadorPortal = () => {
                     {recommendations.filter(r => r.status === 'completed' || r.status === 'approved').length}
                   </h3>
                 </div>
-                <div className="p-2 bg-green-100 rounded-lg">
+                <div className="p-2 bg-green-5000 rounded-lg">
                   <CheckCircle className="w-5 h-5 text-green-600" />
                 </div>
               </div>
@@ -322,8 +322,8 @@ export const AmbassadorPortal = () => {
                         <td className="p-4 text-right">
                           <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                             ref.status === 'completed' || ref.status === 'approved' 
-                              ? 'bg-green-100 text-green-700' 
-                              : 'bg-yellow-100 text-yellow-700'
+                              ? 'bg-green-5000 text-green-700' 
+                              : 'bg-yellow-5000 text-yellow-700'
                           }`}>
                             {ref.status === 'completed' || ref.status === 'approved' ? (
                               <CheckCircle className="w-3 h-3" />
@@ -360,7 +360,7 @@ export const AmbassadorPortal = () => {
                 </div>
                 <div className="flex gap-3">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-xs font-bold text-primary">2</div>
-                  <p className="text-sm">When they pay their 100 XAF registration fee, your balance increases by 50 XAF.</p>
+                  <p className="text-sm">When they pay their 5000 XAF registration fee, your balance increases by 500  XAF.</p>
                 </div>
                 <div className="flex gap-3">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-xs font-bold text-primary">3</div>

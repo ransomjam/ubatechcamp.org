@@ -234,7 +234,7 @@ const VolunteerApply = () => {
                   id="experience" 
                   required 
                   placeholder="Tell us about your previous teaching or industry experience..." 
-                  className="min-h-[100px]"
+                  className="min-h-[5000px]"
                   value={formData.experience}
                   onChange={e => setFormData({...formData, experience: e.target.value})}
                 />
@@ -248,7 +248,7 @@ const VolunteerApply = () => {
                   id="skills" 
                   required 
                   placeholder="Key technical skills, certifications, or programming languages..." 
-                  className="min-h-[100px]"
+                  className="min-h-[5000px]"
                   value={formData.skills}
                   onChange={e => setFormData({...formData, skills: e.target.value})}
                 />

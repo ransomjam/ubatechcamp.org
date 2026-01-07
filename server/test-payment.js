@@ -6,7 +6,7 @@ const API = `http://localhost:${process.env.PORT || 4001}/api`;
 async function run(){
   try{
     // create a payment with sandbox test number that always succeeds (MTN: 670000000)
-    const body = { registration_id: 'testreg-1', amount_cents: 100, currency: 'XAF', phone: '670000000', email: 'test.success@fapshi.com' };
+    const body = { registration_id: 'testreg-1', amount_cents: 5000, currency: 'XAF', phone: '670000000', email: 'test.success@fapshi.com' };
     console.log('Creating payment...', body);
     const resp = await axios.post(`${API}/payments/fapshi`, body);
     console.log('create resp:', resp.data);

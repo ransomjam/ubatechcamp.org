@@ -16,7 +16,7 @@ import { CheckCircle, Upload } from "lucide-react";
 import { submitToGoogleSheets } from "@/lib/googleSheets";
 
 const volunteerSchema = z.object({
-  full_name: z.string().min(2, "Full name is required").max(100),
+  full_name: z.string().min(2, "Full name is required").max(5000),
   email: z.string().email("Invalid email address"),
   phone: z.string().nonempty("Phone number is required"),
   gender: z.enum(["male", "female", "prefer_not_to_say"]),

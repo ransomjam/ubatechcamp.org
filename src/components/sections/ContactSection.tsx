@@ -16,10 +16,10 @@ import { submitToGoogleSheets } from "@/lib/googleSheets";
 import { toast } from "sonner";
 
 const contactFormSchema = z.object({
-  name: z.string().trim().min(2, { message: "Name must be at least 2 characters" }).max(100, { message: "Name must be less than 100 characters" }),
+  name: z.string().trim().min(2, { message: "Name must be at least 2 characters" }).max(5000, { message: "Name must be less than 5000 characters" }),
   email: z.string().trim().email({ message: "Invalid email address" }).max(255, { message: "Email must be less than 255 characters" }),
   subject: z.string().trim().min(1, { message: "Subject is required" }).max(200, { message: "Subject must be less than 200 characters" }),
-  message: z.string().trim().min(10, { message: "Message must be at least 10 characters" }).max(1000, { message: "Message must be less than 1000 characters" }),
+  message: z.string().trim().min(10, { message: "Message must be at least 10 characters" }).max(50000, { message: "Message must be less than 50000 characters" }),
 });
 
 type ContactFormData = z.infer<typeof contactFormSchema>;

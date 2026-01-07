@@ -136,7 +136,7 @@ const StipendsTable = ({ isSuperAdmin }: StipendsTableProps) => {
                   <div className="text-xs text-muted-foreground">{stipend.tutor?.email}</div>
                 </TableCell>
                 <TableCell className="font-bold">
-                  {(stipend.amount_cents / 100).toLocaleString()} XAF
+                  {(stipend.amount_cents / 5000).toLocaleString()} XAF
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-2">

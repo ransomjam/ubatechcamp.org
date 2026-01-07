@@ -24,7 +24,7 @@ const fapshi = {
           'apikey': this.apikey,
           'Content-Type': 'application/json'
         },
-        timeout: 10000
+        timeout: 500000
       });
       return response.data;
     } catch (error) {

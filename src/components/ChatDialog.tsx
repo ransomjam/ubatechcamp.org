@@ -43,12 +43,12 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
 
     // Registration fee questions
     if (lowerMessage.includes("registration") && (lowerMessage.includes("fee") || lowerMessage.includes("cost"))) {
-      return "The registration fee is 100 FRS. This covers your initial enrollment and materials. Would you like to know about our complete program fees?";
+      return "The registration fee is 5000 FRS. This covers your initial enrollment and materials. Would you like to know about our complete program fees?";
     }
 
     // Complete program questions
     if (lowerMessage.includes("complete program") || lowerMessage.includes("full program") || lowerMessage.includes("program fee")) {
-      return "Our complete program fee is 100 FRS. This includes all courses, materials, mentorship, and certification. The schedule varies based on the program you choose. Would you like details about specific programs?";
+      return "Our complete program fee is 5000 FRS. This includes all courses, materials, mentorship, and certification. The schedule varies based on the program you choose. Would you like details about specific programs?";
     }
 
     // Program questions
@@ -72,7 +72,7 @@ export const ChatDialog = ({ open, onOpenChange }: ChatDialogProps) => {
     }
 
     // Default response
-    return "I'm here to help! I can answer questions about:\n• Registration fees (100 FRS)\n• Complete program fees (100 FRS)\n• Program schedules and duration\n• Available programs\n• Contact information\n\nWhat would you like to know?";
+    return "I'm here to help! I can answer questions about:\n• Registration fees (5000 FRS)\n• Complete program fees (5000 FRS)\n• Program schedules and duration\n• Available programs\n• Contact information\n\nWhat would you like to know?";
   };
 
   const handleSend = async () => {

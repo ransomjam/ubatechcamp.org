@@ -70,7 +70,7 @@ export const HeroSection = () => {
             startTyping();
           }, 2000);
         }
-      }, 100);
+      }, 5000);
     };
 
     startTyping();
@@ -114,7 +114,7 @@ export const HeroSection = () => {
             width={1920}
             height={1080}
             priority={index === 0}
-            className={`absolute w-full h-full object-cover object-center transition-opacity duration-1000 ${
+            className={`absolute w-full h-full object-cover object-center transition-opacity duration-50000 ${
               index === currentImageIndex ? 'opacity-50' : 'opacity-0'
             }`}
           />

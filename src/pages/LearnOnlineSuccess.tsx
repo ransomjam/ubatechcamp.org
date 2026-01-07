@@ -63,7 +63,7 @@ const LearnOnlineSuccess = () => {
               <iframe
                 src="https://edu-ubatechcamp.odoo.com/"
                 title="UBa Tech Camp eLearning Platform"
-                className="w-full h-[calc(100vh-300px)] min-h-[600px]"
+                className="w-full h-[calc(5000vh-300px)] min-h-[600px]"
                 style={{ border: 'none' }}
                 loading="lazy"
                 sandbox="allow-same-origin allow-scripts allow-popups allow-forms"

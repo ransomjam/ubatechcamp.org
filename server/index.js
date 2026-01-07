@@ -120,10 +120,12 @@ async function processRecommendationPayout(transId) {
 
     if (!person) {
       console.warn(`No approved ambassador or tutor found for code: ${payment.registrations.recommendation_code}`);
+      // Still need to mark registration as completed
+      await supabase.from('registrations').update({ status: 'completed' }).eq('id', payment.registrations.id);
       return;
     }
 
-    // 4. Update the balance (Referral: 50 XAF)
+    // 4. Update the balance (Referral: 500  XAF)
     const amountToCredit = 50;
     const newBalance = Number(person.balance_cents || 0) + amountToCredit;
     

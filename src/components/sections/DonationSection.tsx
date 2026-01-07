@@ -211,7 +211,7 @@ export const DonationSection: React.FC = () => {
                       type="number"
                       value={formData.amount}
                       onChange={(e) => handleInputChange("amount", e.target.value)}
-                      placeholder="e.g., 100"
+                      placeholder="e.g., 5000"
                       required
                       className="bg-background/50 border-primary/20"
                     />
