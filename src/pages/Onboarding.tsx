@@ -6,19 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { GraduationCap, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { toast } from "sonner";
 import { submitOnboardingForm } from "@/lib/db";
 import { submitToGoogleSheets } from "@/lib/googleSheets";
 
-type OnboardingPath = "alumni" | "current" | null;
+type OnboardingPath = "current" | null;
 
 interface FormData {
   fullName: string;
   phoneNumber: string;
   email: string;
-  programBatch?: string;
-  coursesTaken?: string;
   document?: File;
   whatsappNumber?: string;
   currentProgram?: string;
@@ -62,16 +60,14 @@ const Onboarding = () => {
       fullName: formData.fullName,
       email: formData.email,
       phoneNumber: formData.phoneNumber,
-      studentType: selectedPath as "alumni" | "current",
-      programBatch: formData.programBatch,
-      coursesTaken: formData.coursesTaken,
+      studentType: selectedPath as "current",
       whatsappNumber: formData.whatsappNumber,
       currentProgram: formData.currentProgram,
       trainingStartDate: formData.trainingStartDate,
     };
 
     // Primary: submit via adapter which will use Supabase/API/DB fallbacks.
-    const formType = selectedPath === "alumni" ? "ONBOARDING_ALUMNI" : "ONBOARDING_CURRENT";
+    const formType = "ONBOARDING_CURRENT";
     const adapterResult = await submitToGoogleSheets(formType, submissionData);
 
     if (!adapterResult.success) {
@@ -112,24 +108,9 @@ const Onboarding = () => {
 
           {/* Path Selection Cards */}
           {!selectedPath && (
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div className="flex justify-center mb-8">
               <Card 
-                className="floating-card cursor-pointer border-2 hover:border-primary transition-all"
-                onClick={() => setSelectedPath("alumni")}
-              >
-                <CardHeader className="text-center">
-                  <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                    <GraduationCap className="w-8 h-8 text-primary" />
-                  </div>
-                  <CardTitle className="text-xl text-primary">Alumni</CardTitle>
-                  <CardDescription className="text-foreground/70">
-                    For students from previous batches
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card 
-                className="floating-card cursor-pointer border-2 hover:border-primary transition-all"
+                className="floating-card cursor-pointer border-2 hover:border-primary transition-all max-w-md"
                 onClick={() => setSelectedPath("current")}
               >
                 <CardHeader className="text-center">
@@ -145,90 +126,7 @@ const Onboarding = () => {
             </div>
           )}
 
-          {/* Alumni Form */}
-          {selectedPath === "alumni" && !isSubmitted && (
-            <Card className="border-2 border-primary/20">
-              <CardHeader>
-                <CardTitle className="text-2xl text-primary">Alumni Registration</CardTitle>
-                <CardDescription>
-                  For students from previous batches. Register to reconnect with our community and 
-                  access programmes, resources, and certificates.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="fullName">Full Name *</Label>
-                    <Input
-                      id="fullName"
-                      value={formData.fullName}
-                      onChange={(e) => handleInputChange("fullName", e.target.value)}
-                      required
-                    />
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="phoneNumber">Phone Number *</Label>
-                    <Input
-                      id="phoneNumber"
-                      type="tel"
-                      value={formData.phoneNumber}
-                      onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="programBatch">Programme/Batch Attended</Label>
-                    <Input
-                      id="programBatch"
-                      value={formData.programBatch || ""}
-                      onChange={(e) => handleInputChange("programBatch", e.target.value)}
-                      placeholder="e.g., 2023 Batch, Software Engineering"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="coursesTaken">Course(s) Taken</Label>
-                    <Select
-                      value={formData.coursesTaken || ""}
-                      onValueChange={(v) => handleInputChange("coursesTaken", v)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a course" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-background border-primary/20">
-                        {programOptions.map((prog) => (
-                          <SelectItem key={prog} value={prog}>{prog}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex gap-3 pt-4">
-                    <Button type="submit" variant={isSubmitting ? "submitting" : "default"} className="flex-1" disabled={isSubmitting}>
-                      {isSubmitting ? "Submitting..." : "Submit Registration"}
-                    </Button>
-                    <Button type="button" variant="outline" onClick={resetForm} disabled={isSubmitting}>Back</Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Current Students Form */}
-          {selectedPath === "current" && !isSubmitted && (
             <Card className="border-2 border-primary/20">
               <CardHeader>
                 <CardTitle className="text-2xl text-primary">Current Student Registration</CardTitle>
