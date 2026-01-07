@@ -124,16 +124,6 @@ export const HeroSection = () => {
 
       <div className="container mx-auto max-w-6xl relative z-10">
         <div className="text-center">
-          {/* Logo */}
-          <OptimizedImage 
-           src={logoImage} 
-            alt="UBa Tech Camp Logo"
-           width={128}
-            height={128}
-            priority={true}
-            //className="w-24 h-24 md:w-32 md:h-32 mx-auto mb-6 md:mb-4 mt-8 md:mt-0 drop-shadow-[0_0_20px_rgba(0,85,184,0.5)]"
-          />
-
           <div className="px-6 py-2 mb-8 md:mb-6 relative max-w-md mx-auto">
             <h1 className="text-sm sm:text-base md:text-xl font-bold text-primary dark:text-white text-center tracking-wider" style={{ fontFamily: 'monospace', textShadow: '0 4px 8px rgba(0, 85, 184, 0.7)' }}>
               {typedText}

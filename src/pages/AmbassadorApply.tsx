@@ -212,7 +212,7 @@ export const AmbassadorApply = () => {
                   placeholder="CODE123" 
                   value={formData.onboarded_by_code}
                   onChange={e => setFormData({...formData, onboarded_by_code: e.target.value.toUpperCase()})}
-                  className="bg-white border-primary/20"
+                 // className="bg-white border-primary/20"
                 />
                 <p className="text-[10px] text-muted-foreground italic">
                   If an executive (PRO, Media Lead, etc.) invited you, enter their recommendation code here.
