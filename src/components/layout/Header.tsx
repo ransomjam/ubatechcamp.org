@@ -96,7 +96,7 @@ export const Header = () => {
               height="40"
               loading="eager"
               decoding="async"
-              className="w-10 h-10 rounded-lg object-cover"
+              className="w-10 h-10 object-cover"
             />
             <div>
               <h1 className="text-xl font-bold text-primary">UBa Tech Camp</h1>
