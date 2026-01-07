@@ -134,8 +134,8 @@ async function processRecommendationPayout(transId) {
       return;
     }
 
-    // 4. Update the balance (Referral: 500  XAF)
-    const amountToCredit = 50;
+    // 4. Update the balance (Referral: 500 XAF)
+    const amountToCredit = 500;
     const newBalance = Number(person.balance_cents || 0) + amountToCredit;
     
     const { error: uError } = await supabase
