@@ -15,6 +15,7 @@ import yembiImage from "@/assets/teams/desmond.jpg";
 import BlaiseImage from "@/assets/teams/Blaise.jpg";
 import yveImage from "@/assets/teams/Yve.jpg";
 import princewill from "@/assets/teams/princewill.png";
+import greg from "@/assets/teams/greg.jpeg";
 
 const allTeamMembers = [
   { name: "Engr. Jam Ransom", role: "Founder and Instructor", description: "Mining Engineer | Data Analyst | Innovator", image: ransomImage, social: { linkedin: "http://www.linkedin.com/in/jamransom", facebook: "https://www.facebook.com/jam.ransom.3" } },
@@ -26,7 +27,7 @@ const allTeamMembers = [
   { name: "Anyu Princewill Fon", role: "Data Analysis Instructor", description: "Specialist in statistical analysis and data visualization techniques", image: princewill, social: { linkedin: "#", facebook: "#" } },
   { name: "Nanguat Blaise", role: "Student Leader", description: "SA President NAHPISA, 2023/2024", image: BlaiseImage, social: { linkedin: "#", facebook: "#" } },
   { name: "Kadjo Yve", role: "Student Leader", description: "SA President FEMSSA, 2023/2024", image: yveImage, social: { linkedin: "#", facebook: "#" } },
-  { name: "K. Gregory", role: "Linux Administrator", description: "System administration and Linux infrastructure specialist", image: profImage, social: { linkedin: "#", facebook: "#" } }
+  { name: "K. Gregory", role: "Linux Administrator", description: "System administration and Linux infrastructure specialist", image: greg, social: { linkedin: "#", facebook: "#" } }
 ];
 
 export function TeamSection() {
