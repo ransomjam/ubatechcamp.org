@@ -25,7 +25,8 @@ app.use(cors({
     
     // Check if origin matches any allowed pattern
     const isAllowed = allowedOrigins.some(ao => origin === ao) ||
-                     origin.includes('ubatechcamp') && origin.includes('vercel.app');
+                     (origin.includes('ubatechcamp') && origin.includes('vercel.app')) ||
+                     (origin.includes('jam-ransom') && origin.includes('vercel.app'));
     
     if (isAllowed) {
       return callback(null, true);
@@ -35,7 +36,9 @@ app.use(cors({
       return callback(new Error(msg), false);
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-key']
 }));
 
 app.use(express.json());
