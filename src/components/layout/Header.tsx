@@ -90,13 +90,13 @@ export const Header = () => {
             className="flex items-center space-x-2 hover:opacity-80 transition-opacity cursor-pointer"
           >
             <img 
-              src={logoImage} 
-              alt="UBa Tech Camp Logo"
-              width="40"
-              height="40"
-              loading="eager"
-              decoding="async"
-              className="w-10 h-10 object-cover"
+              //src={logoImage} 
+              //alt="UBa Tech Camp Logo"
+             // width="40"
+             // height="40"
+            //  loading="eager"
+             // decoding="async"
+              //className="w-10 h-10 object-cover"
             />
             <div>
               <h1 className="text-xl font-bold text-primary">UBa Tech Camp</h1>
