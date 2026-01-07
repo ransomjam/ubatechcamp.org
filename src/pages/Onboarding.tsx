@@ -126,7 +126,8 @@ const Onboarding = () => {
             </div>
           )}
 
-
+          {/* Current Students Form */}
+          {selectedPath === "current" && !isSubmitted && (
             <Card className="border-2 border-primary/20">
               <CardHeader>
                 <CardTitle className="text-2xl text-primary">Current Student Registration</CardTitle>
