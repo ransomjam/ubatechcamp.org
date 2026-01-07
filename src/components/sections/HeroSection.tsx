@@ -126,12 +126,12 @@ export const HeroSection = () => {
         <div className="text-center">
           {/* Logo */}
           <OptimizedImage 
-            src={logoImage} 
+           src={logoImage} 
             alt="UBa Tech Camp Logo"
-            width={128}
+           width={128}
             height={128}
             priority={true}
-            className="w-24 h-24 md:w-32 md:h-32 mx-auto mb-6 md:mb-4 mt-8 md:mt-0 drop-shadow-[0_0_20px_rgba(0,85,184,0.5)]"
+            //className="w-24 h-24 md:w-32 md:h-32 mx-auto mb-6 md:mb-4 mt-8 md:mt-0 drop-shadow-[0_0_20px_rgba(0,85,184,0.5)]"
           />
 
           <div className="px-6 py-2 mb-8 md:mb-6 relative max-w-md mx-auto">
