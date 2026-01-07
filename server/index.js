@@ -12,6 +12,8 @@ const allowedOrigins = [
   'https://www.ubatechcamp.org',
   'https://ubatechcamp.org',
   'https://ubatechcamp-org.vercel.app',
+  'https://ubatechcamp-jt7oqhsf0-jam-ransoms-projects.vercel.app',
+  "https://ubatechcamp-jt7oqhsf0-jam-ransoms-projects.vercel.app"
 ];
 
 app.use(cors({
