@@ -13,7 +13,7 @@ const allowedOrigins = [
   'https://ubatechcamp.org',
   'https://ubatechcamp-org.vercel.app',
   'https://ubatechcamp-jt7oqhsf0-jam-ransoms-projects.vercel.app',
-  "https://ubatechcamp-jt7oqhsf0-jam-ransoms-projects.vercel.app"
+  'https://ubatechcamp-4rlcmcgek-jam-ransoms-projects.vercel.app',
 ];
 
 app.use(cors({
@@ -21,7 +21,9 @@ app.use(cors({
     // allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    const isAllowed = allowedOrigins.some(ao => origin.includes(ao.replace('https://', '').replace('http://', '')));
+    // Check if origin matches any allowed pattern
+    const isAllowed = allowedOrigins.some(ao => origin === ao) ||
+                     origin.includes('ubatechcamp') && origin.includes('vercel.app');
     
     if (isAllowed) {
       return callback(null, true);
