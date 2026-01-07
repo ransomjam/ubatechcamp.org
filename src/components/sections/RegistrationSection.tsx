@@ -73,7 +73,7 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
       const regId = res?.id || null;
       setRegistrationId(regId);
 
-      // 2) Ask backend to create a FAPSHI payment and return checkout URL (amount: 5000 XAF)
+      // 2) Ask backend to create a FAPSHI payment and return checkout URL (amount: 5,000)
       const pay = await api.createFapshiPayment({ 
         registration_id: regId, 
         amount_cents: PAYMENT_CONFIG.REGISTRATION_FEE_XAF, 

@@ -360,7 +360,7 @@ export const AmbassadorPortal = () => {
                 </div>
                 <div className="flex gap-3">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-xs font-bold text-primary">2</div>
-                  <p className="text-sm">When they pay their 5000 XAF registration fee, your balance increases by 500  XAF.</p>
+                  <p className="text-sm">When they pay their 5,000 registration fee, your balance increases by 500  XAF.</p>
                 </div>
                 <div className="flex gap-3">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-xs font-bold text-primary">3</div>
