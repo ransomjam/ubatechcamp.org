@@ -20,7 +20,7 @@ import greg from "@/assets/teams/greg.jpeg";
 const allTeamMembers = [
   { name: "Engr. Jam Ransom", role: "Founder and Instructor", description: "Mining Engineer | Data Analyst | Innovator", image: ransomImage, social: { linkedin: "http://www.linkedin.com/in/jamransom", facebook: "https://www.facebook.com/jam.ransom.3" } },
   { name: "Abongni Musuh", role: "Co-founder and Instructor", description: "Strategic partner in building comprehensive tech education programs", image: musuhImage, social: { linkedin: "#", facebook: "#" } },
-  { name: "Prof Anong Damian", role: "Director of Students' affairs", description: "The University of Bamenda", image: profImage, social: { linkedin: "#", facebook: "#" } },
+  //{ name: "Prof Anong Damian", role: "Director of Students' affairs", description: "The University of Bamenda", image: profImage, social: { linkedin: "#", facebook: "#" } },
   { name: "Engr. Lontsi", role: "Dev and ML Instructor ", description: "Computer Engineer | Data Analyst | Innovator", image: mariusImage, social: { linkedin: "http://www.linkedin.com/in/marius-kenne-624482207", facebook: "#" } },
   { name: "Engr. Mile Lambe", role: "Networking Instructor", description: "Electrical Engineer | Computer networking trainer", image: milesImage, social: { linkedin: "#", facebook: "#" } },
   { name: "Desmond", role: "Data Science Instructor", description: "Experienced data science trainer", image: yembiImage, social: { linkedin: "#", facebook: "#" } },
