@@ -220,6 +220,25 @@ export const VolunteerConsole = () => {
     }
   };
 
+  const shareAmbassadorLink = () => {
+    const baseUrl = window.location.origin;
+    const shareUrl = `${baseUrl}/ambassador-apply?code=${volunteer.recommendation_code}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'Become a UBa Tech Camp Ambassador',
+        text: 'Apply to become an ambassador with my recommendation code',
+        url: shareUrl
+      });
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: "Link Copied!",
+        description: "Ambassador application link with your code has been copied.",
+      });
+    }
+  };
+
   if (!volunteer) {
     return (
       <div className="min-h-screen pt-32 pb-20 px-4 bg-muted/30 flex items-center justify-center">
@@ -496,10 +515,8 @@ export const VolunteerConsole = () => {
                   <Button onClick={shareRecommendationLink} className="h-11 px-4">
                     <Share2 className="w-4 h-4" />
                   </Button>
-                  <Button asChild className="h-11 px-4 bg-green-600 hover:bg-green-700">
-                    <a href={`/ambassador-apply?code=${volunteer.recommendation_code}`} target="_blank">
-                      Add Ambassadors
-                    </a>
+                  <Button onClick={shareAmbassadorLink} className="h-11 px-4 bg-green-600 hover:bg-green-700">
+                    Add Ambassadors
                   </Button>
                 </div>
               </CardContent>
