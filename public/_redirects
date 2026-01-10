@@ -1,1 +1,9 @@
+# Force HTTPS redirects
+http://ubatechcamp.org/* https://www.ubatechcamp.org/:splat 301!
+http://www.ubatechcamp.org/* https://www.ubatechcamp.org/:splat 301!
+
+# Redirect Vercel URLs to main domain
+https://*.vercel.app/* https://www.ubatechcamp.org/:splat 301!
+
+# SPA fallback
 /*    /index.html   200

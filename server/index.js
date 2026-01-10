@@ -229,7 +229,7 @@ app.post('/api/payments/fapshi', async (req, res) => {
       phone: phone || undefined,
       userId: registration_id,
       externalId: registration_id,
-      redirectUrl: `${process.env.FRONTEND_URL || 'https://www.ubatechcamp.org'}/registration-complete`,
+      redirectUrl: `https://www.ubatechcamp.org/registration-complete`,
       message: 'Registration fee'
     };
 

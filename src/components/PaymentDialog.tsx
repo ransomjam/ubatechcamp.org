@@ -70,15 +70,23 @@ export const PaymentDialog = ({
     (async () => {
       try{
         const amountCents = toCents(amount || "5000");
-        // open blank window to preserve gesture
-        const checkoutWindow = window.open('', '_blank');
+        const checkoutWindow = window.open('', '_blank', 'noopener,noreferrer');
         const resp = await api.createFapshiPayment({ registration_id: registrationId, amount_cents: amountCents, currency: 'XAF', phone: phone || undefined });
         const paymentId = resp.payment_id;
         const checkout = resp.checkout_url || resp.transUrl || resp.url || null;
+        
+        // Ensure HTTPS URL
+        const secureCheckout = checkout?.replace(/^http:/, 'https:') || checkout;
+        
         if (checkoutWindow && !checkoutWindow.closed){
-          try{ checkoutWindow.location.href = checkout; }catch(e){ window.open(checkout, '_blank'); }
+          try{ 
+            checkoutWindow.location.href = secureCheckout; 
+          }catch(e){ 
+            checkoutWindow.close();
+            window.open(secureCheckout, '_blank', 'noopener,noreferrer'); 
+          }
         } else {
-          window.open(checkout, '_blank');
+          window.open(secureCheckout, '_blank', 'noopener,noreferrer');
         }
 
         // poll status
