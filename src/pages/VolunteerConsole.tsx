@@ -15,7 +15,8 @@ import {
   DollarSign,
   Briefcase,
   UserCheck,
-  Share2
+  Share2,
+  Globe
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { PROGRAM_OPTIONS } from '@/lib/programs';
