@@ -94,6 +94,25 @@ export const AmbassadorPortal = () => {
     });
   };
 
+  const shareRecommendationLink = () => {
+    const baseUrl = window.location.origin;
+    const shareUrl = `${baseUrl}/#registration?code=${ambassador.recommendation_code}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'Join UBa Tech Camp',
+        text: 'Register for UBa Tech Camp with my recommendation code',
+        url: shareUrl
+      });
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: "Link Copied!",
+        description: "Registration link with your code has been copied.",
+      });
+    }
+  };
+
   const handleWithdraw = async () => {
     const amount = parseInt(withdrawAmount);
     if (isNaN(amount) || amount < 2000) {
@@ -282,8 +301,11 @@ export const AmbassadorPortal = () => {
                   <p className="text-primary text-sm font-medium">Your Code</p>
                   <h3 className="text-2xl font-mono font-bold mt-1 text-primary">{ambassador.recommendation_code}</h3>
                 </div>
-                <Button size="icon" variant="ghost" className="text-primary" onClick={copyRecommendationCode}>
-                  <Copy className="w-5 h-5" />
+                <Button size="icon" variant="ghost" className="text-primary mr-1" onClick={copyRecommendationCode}>
+                  <Copy className="w-4 h-4" />
+                </Button>
+                <Button size="icon" variant="ghost" className="text-primary" onClick={shareRecommendationLink}>
+                  <Share2 className="w-4 h-4" />
                 </Button>
               </div>
               <p className="mt-3 text-xs text-primary/70">Share this code with students to earn rewards.</p>

@@ -12,6 +12,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Onboarding from "./pages/Onboarding";
 import AmbassadorApply from "./pages/AmbassadorApply";
 import AmbassadorPortal from "./pages/AmbassadorPortal";
+import AmbassadorLanding from "./pages/AmbassadorLanding";
 import VolunteerConsole from "./pages/VolunteerConsole";
 import SuperAdmin from "./pages/SuperAdmin";
 import LearnOnlineAuth from "./pages/LearnOnlineAuth";
@@ -33,9 +34,10 @@ const App = () => (
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/ambassador" element={<AmbassadorLanding />} />
           <Route path="/ambassador-apply" element={<AmbassadorApply />} />
           <Route path="/ambassador-portal" element={<AmbassadorPortal />} />
-          <Route path="/volunteer-console" element={<VolunteerConsole />} />
+          <Route path="/volunteer" element={<VolunteerConsole />} />
           <Route path="/learn-online/auth" element={<LearnOnlineAuth />} />
           <Route path="/learn-online/payment" element={<LearnOnlinePayment />} />
           <Route path="/learn-online/success" element={<LearnOnlineSuccess />} />

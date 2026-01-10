@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ interface RegistrationSectionProps {
 }
 
 export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initialProgram }) => {
+  const [searchParams] = useSearchParams();
   const [phase, setPhase] = useState<"form" | "success">("form");
   const [formData, setFormData] = useState({
     fullName: "",
@@ -38,7 +40,17 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
     if (initialProgram) {
       setFormData(prev => ({ ...prev, program: initialProgram }));
     }
-  }, [initialProgram]);
+    const codeFromUrl = searchParams.get('code');
+    if (codeFromUrl) {
+      setFormData(prev => ({ ...prev, recommendationCode: codeFromUrl }));
+    }
+    // Also check hash parameters for URLs like /#registration?code=ABC123
+    const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+    const codeFromHash = urlParams.get('code');
+    if (codeFromHash) {
+      setFormData(prev => ({ ...prev, recommendationCode: codeFromHash }));
+    }
+  }, [initialProgram, searchParams]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [registrationId, setRegistrationId] = useState<string | null>(null);
@@ -383,6 +395,7 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
 
                 {/* duplicate education level removed */}
                 <div className="text-sm text-muted-foreground mb-2">Registration fee: <span className="font-semibold text-foreground">{formatAmount(PAYMENT_CONFIG.REGISTRATION_FEE_XAF)} </span> — you'll be redirected to secure checkout to complete payment.</div>
+                
                 <Button 
                   type="submit" 
                   variant={isSubmitting ? "submitting" : "default"}

@@ -32,7 +32,21 @@ export const AmbassadorsTable = ({ isSuperAdmin }: AmbassadorsTableProps) => {
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
-      setAmbassadors(data || []);
+      // Fetch recommender names separately
+      const ambassadorsWithRecommenders = await Promise.all(
+        (data || []).map(async (ambassador) => {
+          if (ambassador.onboarded_by_code) {
+            const { data: tutor } = await supabase
+              .from('tutors')
+              .select('full_name')
+              .eq('recommendation_code', ambassador.onboarded_by_code)
+              .single();
+            return { ...ambassador, recommender_name: tutor?.full_name };
+          }
+          return { ...ambassador, recommender_name: null };
+        })
+      );
+      setAmbassadors(ambassadorsWithRecommenders);
     }
     setLoading(false);
   };
@@ -96,6 +110,7 @@ export const AmbassadorsTable = ({ isSuperAdmin }: AmbassadorsTableProps) => {
             <TableHead>Name</TableHead>
             <TableHead>School & Dept</TableHead>
             <TableHead>Contact</TableHead>
+            <TableHead>Recommender</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Rec. Code</TableHead>
             {isSuperAdmin && <TableHead>Balance</TableHead>}
@@ -113,6 +128,9 @@ export const AmbassadorsTable = ({ isSuperAdmin }: AmbassadorsTableProps) => {
               <TableCell>
                 <div className="text-xs">{a.email}</div>
                 <div className="text-xs">{a.phone}</div>
+              </TableCell>
+              <TableCell className="text-xs">
+                {a.recommender_name || a.onboarded_by_code || '-'}
               </TableCell>
               <TableCell>
                 <Badge variant={a.status === 'approved' ? 'default' : 'secondary'}>

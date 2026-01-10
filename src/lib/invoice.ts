@@ -21,7 +21,7 @@ export const generateInvoice = (data: InvoiceData) => {
     success: [34, 197, 94] as [number, number, number],   // Green
     bgLight: [248, 250, 252] as [number, number, number], // Light Slate
     textMain: [30, 41, 59] as [number, number, number],   // Dark Slate
-    textMuted: [5000, 116, 139] as [number, number, number]// Slate-500
+    textMuted: [100, 116, 139] as [number, number, number]// Slate-500
   };
 
   // 1. HEADER SECTION (WHITE BACKGROUND)
@@ -51,13 +51,8 @@ export const generateInvoice = (data: InvoiceData) => {
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(...colors.textMuted);
-  doc.text('INNOVATION • TECHNOLOGY • IMPACT', 48, 27);
+  doc.text('INNOVATION - TECHNOLOGY - IMPACT', 48, 27);
 
-  // Invoice Title Right-Aligned
-  doc.setTextColor(...colors.primary);
-  doc.setFontSize(18);
-  doc.text('OFFICIAL RECEIPT', 190, 22, { align: 'right' });
-  
   doc.setFontSize(8);
   doc.setTextColor(...colors.textMuted);
   doc.text('Reference: ' + data.transId, 190, 28, { align: 'right' });
@@ -68,39 +63,49 @@ export const generateInvoice = (data: InvoiceData) => {
   doc.setLineWidth(0.5);
   doc.line(20, 45, 190, 45);
 
+  // Note about registration fee
+  doc.setTextColor(...colors.primary);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('UBaTech Camp Registration', 20, 52);
+  
+  doc.setTextColor(...colors.textMuted);
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Note: This amount represents the registration fee only and does not constitute a course fee. All courses are offered at no cost.', 20, 58);
+
   // 3. BILLING SECTION
   doc.setTextColor(...colors.textMain);
   doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
-  doc.text('BILL TO:', 20, 65);
+  doc.text('BILL TO:', 20, 70);
 
   doc.setFontSize(13);
-  doc.text(data.fullName.toUpperCase(), 20, 72);
+  doc.text(data.fullName.toUpperCase(), 20, 77);
   
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  doc.text(data.email, 20, 77);
-  doc.text('Student / Participant', 20, 82);
+  doc.text(data.email, 20, 82);
+  doc.text('Student / Participant', 20, 87);
 
   // Organization Info
   doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
-  doc.text('ORGANIZATION:', 130, 65);
+  doc.text('ORGANIZATION:', 130, 70);
   doc.setFont('helvetica', 'normal');
-  doc.text('UBaTech Camp', 130, 70);
-  doc.text('Bambili, Bamenda', 130, 75);
-  doc.text('North West Region, Cameroon', 130, 80);
-  doc.text('www.ubatechcamp.org', 130, 85);
+  doc.text('UBaTech Camp', 130, 75);
+  doc.text('Bambili, Bamenda', 130, 80);
+  doc.text('North West Region, Cameroon', 130, 85);
+  doc.text('www.ubatechcamp.org', 130, 90);
 
   // 4. TABLE SECTION
   autoTable(doc, {
-    startY: 5000,
-    head: [['TRANS ID', 'DESCRIPTION', 'QTY', 'TOTAL (XAF)']],
+    startY: 100,
+    head: [['TRANS ID', 'COURSE', 'AMOUNT (XAF)']],
     body: [
       [
         data.transId.substring(0, 8), 
-        `Registration for ${data.program}`, 
-        '1', 
+        data.program, 
         data.amount.toLocaleString()
       ],
     ],
@@ -119,8 +124,7 @@ export const generateInvoice = (data: InvoiceData) => {
     },
     columnStyles: {
       0: { halign: 'center', cellWidth: 35 },
-      2: { halign: 'center', cellWidth: 20 },
-      3: { halign: 'right', cellWidth: 40 }
+      2: { halign: 'right', cellWidth: 40 }
     }
   });
 
@@ -155,7 +159,7 @@ export const generateInvoice = (data: InvoiceData) => {
   const noteY = 250;
   doc.text('IMPORTANT NOTES:', 20, noteY);
   doc.text('• Please present this receipt (printed/digital) at the orientation center.', 20, noteY + 5);
-  doc.text('• Valid for UBaTech Camp 2026. Non-refundable.', 20, noteY + 10);
+  doc.text('• Valid for UBaTech Camp 3rd edition, 2026. Non-refundable.', 20, noteY + 10);
 
   // 8. FOOTER
   doc.setDrawColor(226, 232, 240);

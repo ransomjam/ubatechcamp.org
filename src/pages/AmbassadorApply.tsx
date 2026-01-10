@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +10,7 @@ import { CheckCircle, ArrowRight, UserCircle, School, BookOpen, GraduationCap, P
 import { useToast } from '@/hooks/use-toast';
 
 export const AmbassadorApply = () => {
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -22,6 +24,13 @@ export const AmbassadorApply = () => {
     email: '',
     onboarded_by_code: ''
   });
+
+  useEffect(() => {
+    const codeFromUrl = searchParams.get('code');
+    if (codeFromUrl) {
+      setFormData(prev => ({ ...prev, onboarded_by_code: codeFromUrl }));
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

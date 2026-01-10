@@ -28,7 +28,27 @@ const RegistrationsTable = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setRegistrations(data || []);
+      
+      // Fetch recommender names separately (only tutors/executives)
+      const registrationsWithRecommenders = await Promise.all(
+        (data || []).map(async (registration) => {
+          if (registration.recommendation_code) {
+            const { data: tutor } = await supabase
+              .from('tutors')
+              .select('full_name')
+              .eq('recommendation_code', registration.recommendation_code)
+              .single();
+            
+            return { 
+              ...registration, 
+              recommender_name: tutor?.full_name 
+            };
+          }
+          return { ...registration, recommender_name: null };
+        })
+      );
+      
+      setRegistrations(registrationsWithRecommenders);
     } catch (err) {
       console.error('Error fetching registrations:', err);
     } finally {
@@ -106,13 +126,14 @@ const RegistrationsTable = () => {
               <TableHead>Institution/Dept</TableHead>
               <TableHead>Registered</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Recommender</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredRegistrations.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                   No registrations found
                 </TableCell>
               </TableRow>
@@ -143,6 +164,9 @@ const RegistrationsTable = () => {
                     <Badge className={getStatusColor(registration.status)}>
                       {registration.status}
                     </Badge>
+                  </TableCell>
+                  <TableCell className="text-xs">
+                    {registration.recommender_name || "-"}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="sm">

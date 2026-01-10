@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Code, Users, Calendar, BookOpen, Info, Sun, Moon, UserPlus, HandHeart, UsersRound, ChevronDown, Award, GraduationCap } from "lucide-react";
+import { Menu, X, Code, Users, Calendar, BookOpen, Info, Sun, Moon, UserPlus, HandHeart } from "lucide-react";
 import { useTheme } from "next-themes";
 import logoImage from "@/assets/uba-tech-camp-logo-new.png";
 import {
@@ -12,12 +12,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -127,27 +121,6 @@ export const Header = () => {
                 </a>
               )
             ))}
-
-            {/* Ambassador Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center space-x-2 text-foreground/90 hover:text-primary transition-colors font-medium outline-none">
-                <Award className="w-4 h-4" />
-                <span>Ambassador</span>
-                <ChevronDown className="w-4 h-4 ml-1 opacity-50" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56 glass-card border-primary/20">
-                <DropdownMenuItem className="focus:bg-primary/10 focus:text-primary">
-                  <Link to="/ambassador-apply" className="flex items-center w-full">
-                    Become an Ambassador
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="focus:bg-primary/10 focus:text-primary">
-                  <Link to="/ambassador-portal" className="flex items-center w-full">
-                    Ambassador Portal
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </nav>
 
           {/* Theme Toggle & CTA Button */}
@@ -240,27 +213,6 @@ export const Header = () => {
                   </a>
                 )
               ))}
-
-              {/* Mobile Ambassador Section */}
-              <div className="flex flex-col space-y-3 pt-2">
-                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2">Ambassador</div>
-                <Link
-                  to="/ambassador-apply"
-                  className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors px-4"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <Award className="w-4 h-4" />
-                  <span>Become an Ambassador</span>
-                </Link>
-                <Link
-                  to="/ambassador-portal"
-                  className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors px-4"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <UsersRound className="w-4 h-4" />
-                  <span>Ambassador Portal</span>
-                </Link>
-              </div>
 
               <Button 
                 className="bg-primary hover:bg-primary-hover w-full mt-4"

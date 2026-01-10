@@ -14,7 +14,6 @@ import {
   LogOut, 
   DollarSign,
   Briefcase,
-  Globe,
   UserCheck,
   Share2
 } from 'lucide-react';
@@ -54,7 +53,6 @@ export const VolunteerConsole = () => {
     role: 'pro',
     course_teaching: ''
   });
-  const [allAmbassadorsCount, setAllAmbassadorsCount] = useState(0);
   const [myAmbassadors, setMyAmbassadors] = useState<any[]>([]);
   const [allParticipants, setAllParticipants] = useState<any[]>([]);
 
@@ -163,17 +161,10 @@ export const VolunteerConsole = () => {
     const isExecutive = ['pro', 'media', 'community'].includes(volunteerData.role);
     
     if (isExecutive) {
-      // PRO, Media, Community: Fetch Ambassador Counts
-      const { count: ambCount } = await supabase
-        .from('ambassadors')
-        .select('id', { count: 'exact', head: true });
-      
-      setAllAmbassadorsCount(ambCount || 0);
-
-      // Fetch Ambassadors onboarded by THIS specific executive
+// Fetch Ambassadors onboarded by THIS specific executive
       const { data: myAmbs } = await supabase
         .from('ambassadors')
-        .select('full_name, email, status, created_at') // Removed city, institution as they might be missing
+        .select('full_name, email, status, created_at, school_faculty')
         .eq('onboarded_by_code', volunteerData.recommendation_code)
         .order('created_at', { ascending: false });
       
@@ -208,6 +199,25 @@ export const VolunteerConsole = () => {
       title: "Copied!",
       description: "Recommendation code copied.",
     });
+  };
+
+  const shareRecommendationLink = () => {
+    const baseUrl = window.location.origin;
+    const shareUrl = `${baseUrl}/#registration?code=${volunteer.recommendation_code}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'Join UBa Tech Camp',
+        text: 'Register for UBa Tech Camp with my recommendation code',
+        url: shareUrl
+      });
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: "Link Copied!",
+        description: "Registration link with your code has been copied.",
+      });
+    }
   };
 
   if (!volunteer) {
@@ -373,7 +383,7 @@ export const VolunteerConsole = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <Card className="bg-primary text-primary-foreground border-none">
             <CardContent className="pt-6">
               <div className="flex justify-between items-start">
@@ -407,41 +417,22 @@ export const VolunteerConsole = () => {
           </Card>
 
           {['pro', 'media', 'community'].includes(volunteer.role) ? (
-            <>
-              <Card className="border-primary/10">
-                <CardContent className="pt-6">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="text-muted-foreground text-sm font-medium uppercase tracking-wider">Total Ambassadors</p>
-                      <h3 className="text-3xl font-bold mt-1 text-foreground">{allAmbassadorsCount}</h3>
-                    </div>
-                    <div className="p-2 bg-blue-5000 rounded-lg">
-                      <Globe className="w-5 h-5 text-blue-600" />
-                    </div>
+            <Card className="border-primary/10 bg-primary/[0.02]">
+              <CardContent className="pt-6">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-muted-foreground text-sm font-medium uppercase tracking-wider">Onboarded by You</p>
+                    <h3 className="text-3xl font-bold mt-1 text-primary">{myAmbassadors.length}</h3>
                   </div>
-                  <div className="mt-4 text-xs text-muted-foreground font-medium uppercase tracking-tighter italic">
-                    All regions / institutions
+                  <div className="p-2 bg-green-5000 rounded-lg">
+                    <UserCheck className="w-5 h-5 text-green-600" />
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-primary/10 bg-primary/[0.02]">
-                <CardContent className="pt-6">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="text-muted-foreground text-sm font-medium uppercase tracking-wider">Onboarded by You</p>
-                      <h3 className="text-3xl font-bold mt-1 text-primary">{myAmbassadors.length}</h3>
-                    </div>
-                    <div className="p-2 bg-green-5000 rounded-lg">
-                      <UserCheck className="w-5 h-5 text-green-600" />
-                    </div>
-                  </div>
-                  <div className="mt-4 text-xs text-muted-foreground font-medium uppercase tracking-tighter">
-                    Ambassadors recruited using your code
-                  </div>
-                </CardContent>
-              </Card>
-            </>
+                </div>
+                <div className="mt-4 text-xs text-muted-foreground font-medium uppercase tracking-tighter">
+                  Ambassadors recruited using your code
+                </div>
+              </CardContent>
+            </Card>
           ) : (
             <>
               <Card className="border-primary/10">
@@ -468,8 +459,11 @@ export const VolunteerConsole = () => {
                       <p className="text-primary text-sm font-semibold uppercase tracking-wider">Your Code</p>
                       <h3 className="text-2xl font-mono font-bold mt-1 text-primary">{volunteer.recommendation_code}</h3>
                     </div>
-                    <Button size="icon" variant="ghost" className="text-primary hover:bg-primary/10" onClick={copyRecommendationCode}>
-                      <Copy className="w-5 h-5" />
+                    <Button size="icon" variant="ghost" className="text-primary hover:bg-primary/10 mr-1" onClick={copyRecommendationCode}>
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                    <Button size="icon" variant="ghost" className="text-primary hover:bg-primary/10" onClick={shareRecommendationLink}>
+                      <Share2 className="w-4 h-4" />
                     </Button>
                   </div>
                   <p className="mt-4 text-[10px] text-muted-foreground font-medium uppercase">Share for academic recommendations.</p>
@@ -496,8 +490,16 @@ export const VolunteerConsole = () => {
                   <code className="bg-white border-2 border-primary/20 px-6 py-2 rounded-lg font-mono text-xl font-extrabold text-primary tracking-widest flex-1 text-center">
                     {volunteer.recommendation_code}
                   </code>
-                  <Button onClick={copyRecommendationCode} className="h-11 px-6">
-                    <Copy className="w-4 h-4 mr-2" /> Copy Code
+                  <Button onClick={copyRecommendationCode} variant="outline" className="h-11 px-4">
+                    <Copy className="w-4 h-4" />
+                  </Button>
+                  <Button onClick={shareRecommendationLink} className="h-11 px-4">
+                    <Share2 className="w-4 h-4" />
+                  </Button>
+                  <Button asChild className="h-11 px-4 bg-green-600 hover:bg-green-700">
+                    <a href={`/ambassador-apply?code=${volunteer.recommendation_code}`} target="_blank">
+                      Add Ambassadors
+                    </a>
                   </Button>
                 </div>
               </CardContent>
@@ -529,8 +531,8 @@ export const VolunteerConsole = () => {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Full Name</TableHead>
-                        <TableHead>Institution</TableHead>
-                        <TableHead>City</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>School</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Date</TableHead>
                       </TableRow>
@@ -539,11 +541,11 @@ export const VolunteerConsole = () => {
                       {myAmbassadors.map((amb, i) => (
                         <TableRow key={i}>
                           <TableCell className="font-medium text-sm">{amb.full_name}</TableCell>
-                          <TableCell className="text-xs">{amb.institution}</TableCell>
-                          <TableCell className="text-xs">{amb.city}</TableCell>
+                          <TableCell className="text-xs">{amb.email}</TableCell>
+                          <TableCell className="text-xs">{amb.school_faculty || '-'}</TableCell>
                           <TableCell>
                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                              amb.status === 'active' ? 'bg-green-5000 text-green-700' : 'bg-yellow-5000 text-yellow-700'
+                              amb.status === 'approved' ? 'bg-green-5000 text-green-700' : 'bg-yellow-5000 text-yellow-700'
                             }`}>
                               {amb.status}
                             </span>

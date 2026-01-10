@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +18,7 @@ interface FormData {
   fullName: string;
   phoneNumber: string;
   email: string;
+  recommendationCode?: string;
   document?: File;
   whatsappNumber?: string;
   currentProgram?: string;
@@ -32,6 +34,7 @@ const programOptions = [
 ];
 
 const Onboarding = () => {
+  const [searchParams] = useSearchParams();
   const [selectedPath, setSelectedPath] = useState<OnboardingPath>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,7 +42,15 @@ const Onboarding = () => {
     fullName: "",
     phoneNumber: "",
     email: "",
+    recommendationCode: "",
   });
+
+  useEffect(() => {
+    const codeFromUrl = searchParams.get('code');
+    if (codeFromUrl) {
+      setFormData(prev => ({ ...prev, recommendationCode: codeFromUrl }));
+    }
+  }, [searchParams]);
 
   const handleInputChange = (field: keyof FormData, value: string | File) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -64,6 +75,7 @@ const Onboarding = () => {
       whatsappNumber: formData.whatsappNumber,
       currentProgram: formData.currentProgram,
       trainingStartDate: formData.trainingStartDate,
+      recommendationCode: formData.recommendationCode,
     };
 
     // Primary: submit via adapter which will use Supabase/API/DB fallbacks.
@@ -86,6 +98,7 @@ const Onboarding = () => {
       fullName: "",
       phoneNumber: "",
       email: "",
+      recommendationCode: "",
     });
   };
 
@@ -204,6 +217,16 @@ const Onboarding = () => {
                       type="date"
                       value={formData.trainingStartDate || ""}
                       onChange={(e) => handleInputChange("trainingStartDate", e.target.value)}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="recommendationCode">Recommendation Code (Optional)</Label>
+                    <Input
+                      id="recommendationCode"
+                      value={formData.recommendationCode || ""}
+                      onChange={(e) => handleInputChange("recommendationCode", e.target.value)}
+                      placeholder="Enter code if you have one"
                     />
                   </div>
 
