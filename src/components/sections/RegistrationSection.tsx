@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar, CheckCircle, MessageCircle, Users } from "lucide-react";
+import { Calendar, CheckCircle, MessageCircle, Users, X, Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PROGRAM_OPTIONS } from "@/lib/programs";
 import { toast } from "sonner";
@@ -22,6 +22,8 @@ interface RegistrationSectionProps {
 export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initialProgram }) => {
   const [searchParams] = useSearchParams();
   const [phase, setPhase] = useState<"form" | "success">("form");
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -65,9 +67,6 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
       return;
     }
     setIsSubmitting(true);
-    // Open a blank window immediately to preserve the user gesture and avoid popup blockers.
-    // We'll navigate it to the provider checkout URL once the backend returns it.
-    const checkoutWindow = window.open('', '_blank');
     try {
       console.log('Registration submit: VITE_API_BASE_URL=', import.meta.env.VITE_API_BASE_URL);
       // 1) Create registration on server (status: pending_payment)
@@ -75,6 +74,9 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
         full_name: formData.fullName,
         email: formData.email,
         phone: formData.phone || "",
+        institution: formData.institution === "Others" ? formData.institutionOther : formData.institution,
+        school_faculty: formData.schoolFaculty || undefined,
+        field_of_study: formData.fieldOfStudy || undefined,
         program: formData.program || "",
         payment_plan: "default",
         education_level: formData.educationLevel || undefined,
@@ -96,38 +98,10 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
       console.log('createFapshiPayment response:', pay);
       setPaymentId(pay.payment_id);
 
-      // 3) Navigate the previously opened window (if available) to the checkout URL.
-      try {
-        if (checkoutWindow && !checkoutWindow.closed) {
-          try {
-            checkoutWindow.location.href = pay.checkout_url;
-            toast.success("Checkout opened — complete payment to confirm registration.");
-          } catch (navErr) {
-            console.error('Failed to navigate checkout window', navErr);
-            // fallback: open a new window/tab
-            const fw = window.open(pay.checkout_url, "_blank");
-            if (fw) toast.success("Checkout opened — complete payment to confirm registration.");
-            else toast.error('Unable to open checkout window. Copy this URL and open manually: ' + pay.checkout_url);
-          }
-        } else {
-          // popup was blocked early; try opening now (may still be blocked)
-          const nw = window.open(pay.checkout_url, "_blank");
-          if (nw) {
-            toast.success("Checkout opened — complete payment to confirm registration.");
-          } else {
-             // If both failed, we must at least tell the user
-             toast.error("Popup blocked! Please allow popups or click here to pay:", {
-               action: {
-                 label: "Open Payment",
-                 onClick: () => window.open(pay.checkout_url, "_blank")
-               },
-               duration: 500000
-             });
-          }
-        }
-      } catch (err) {
-        console.error('checkout open/navigation error', err);
-      }
+      // 3) Show embedded checkout modal instead of popup window
+      setCheckoutUrl(pay.checkout_url);
+      setShowCheckoutModal(true);
+      toast.success("Payment page loaded — complete your transaction below.");
 
       // 4) Poll payment status (mock-friendly). timeout ~2 minutes
       setIsWaitingPayment(true);
@@ -188,10 +162,8 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
       }, 2000);
     } catch (err: any) {
       console.error("Registration/payment error", err);
-      // Close the blank window if we haven't navigated it yet
-      if (checkoutWindow && !checkoutWindow.closed) {
-        checkoutWindow.close();
-      }
+      setShowCheckoutModal(false);
+      setIsSubmitting(false);
       
       // Handle CORS errors specifically
       if (err?.message?.includes('Failed to fetch') || err?.name === 'TypeError') {
@@ -386,7 +358,7 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
                   <Input
                     id="recommendationCode"
                     type="text"
-                    placeholder="Enter recommendation code (Optional)"
+                    placeholder="Leave Empty"
                     value={formData.recommendationCode}
                     onChange={(e) => setFormData({ ...formData, recommendationCode: e.target.value })}
                     className="mt-1 bg-background/50 border-primary/20 focus:border-primary"
@@ -462,6 +434,56 @@ export const RegistrationSection: React.FC<RegistrationSectionProps> = ({ initia
               </div>
             </CardContent>
           </Card>
+        )}
+
+        {/* Embedded Payment Modal - FAPSHI Checkout */}
+        {showCheckoutModal && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-md bg-card">
+              <div className="absolute top-4 right-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCheckoutModal(false)}
+                  className="h-8 w-8 p-0"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              <CardContent className="p-6">
+                <div className="mb-6">
+                  <h3 className="text-lg font-bold text-foreground mb-1">Complete Payment</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Registration fee: <span className="font-semibold text-foreground">{formatAmount(PAYMENT_CONFIG.REGISTRATION_FEE_XAF)}</span>
+                  </p>
+                </div>
+
+                {!checkoutUrl ? (
+                  <div className="flex justify-center py-8">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      Click the button below to proceed to secure payment processing:
+                    </p>
+                    <Button 
+                      onClick={() => {
+                        window.open(checkoutUrl, '_blank');
+                      }}
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-2 h-10"
+                    >
+                      Complete Payment via FAPSHI
+                    </Button>
+                    <p className="text-xs text-muted-foreground text-center pt-2 border-t">
+                      You will be redirected to our secure payment partner (FAPSHI)
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         )}
       </div>
     </section>

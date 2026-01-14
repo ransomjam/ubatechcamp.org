@@ -18,6 +18,9 @@ interface FormData {
   fullName: string;
   phoneNumber: string;
   email: string;
+  institution?: string;
+  schoolFaculty?: string;
+  fieldOfStudy?: string;
   recommendationCode?: string;
   document?: File;
   whatsappNumber?: string;
@@ -42,6 +45,9 @@ const Onboarding = () => {
     fullName: "",
     phoneNumber: "",
     email: "",
+    institution: "",
+    schoolFaculty: "",
+    fieldOfStudy: "",
     recommendationCode: "",
   });
 
@@ -71,6 +77,9 @@ const Onboarding = () => {
       fullName: formData.fullName,
       email: formData.email,
       phoneNumber: formData.phoneNumber,
+      institution: formData.institution,
+      schoolFaculty: formData.schoolFaculty,
+      fieldOfStudy: formData.fieldOfStudy,
       studentType: selectedPath as "current",
       whatsappNumber: formData.whatsappNumber,
       currentProgram: formData.currentProgram,
@@ -98,6 +107,9 @@ const Onboarding = () => {
       fullName: "",
       phoneNumber: "",
       email: "",
+      institution: "",
+      schoolFaculty: "",
+      fieldOfStudy: "",
       recommendationCode: "",
     });
   };
@@ -190,6 +202,36 @@ const Onboarding = () => {
                       value={formData.email}
                       onChange={(e) => handleInputChange("email", e.target.value)}
                       required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="institution">Institution</Label>
+                    <Input
+                      id="institution"
+                      value={formData.institution || ""}
+                      onChange={(e) => handleInputChange("institution", e.target.value)}
+                      placeholder="Enter your institution"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="schoolFaculty">School / Faculty</Label>
+                    <Input
+                      id="schoolFaculty"
+                      value={formData.schoolFaculty || ""}
+                      onChange={(e) => handleInputChange("schoolFaculty", e.target.value)}
+                      placeholder="Enter your school or faculty"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="fieldOfStudy">Department / Field of Study</Label>
+                    <Input
+                      id="fieldOfStudy"
+                      value={formData.fieldOfStudy || ""}
+                      onChange={(e) => handleInputChange("fieldOfStudy", e.target.value)}
+                      placeholder="Enter your department or field of study"
                     />
                   </div>
 

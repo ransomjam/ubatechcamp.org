@@ -45,6 +45,9 @@ export const submitOnboardingForm = async (data: {
   email: string;
   phoneNumber?: string;
   studentId?: string;
+  institution?: string;
+  schoolFaculty?: string;
+  fieldOfStudy?: string;
   department?: string;
   deviceAvailable?: string;
   studentType: "alumni" | "current";
@@ -60,6 +63,9 @@ export const submitOnboardingForm = async (data: {
       email: data.email,
       phoneNumber: data.phoneNumber || "",
       studentId: data.studentId || "",
+      institution: data.institution || "",
+      schoolFaculty: data.schoolFaculty || "",
+      fieldOfStudy: data.fieldOfStudy || "",
       department: data.department || "",
       deviceAvailable: data.deviceAvailable || "",
       studentType: data.studentType,

@@ -216,6 +216,106 @@ app.post('/api/registrations', async (req, res) => {
   }
 });
 
+// Mobile Money Payment Endpoint (MTN/Orange direct payment)
+app.post('/api/payments/mobile', async (req, res) => {
+  try {
+    const { registration_id, provider, phone, amount_cents, currency } = req.body;
+    
+    if (!registration_id || !provider || !phone || !amount_cents) {
+      return res.status(400).json({ error: 'Missing required fields: registration_id, provider, phone, amount_cents' });
+    }
+
+    if (!['mtn', 'orange'].includes(provider)) {
+      return res.status(400).json({ error: 'Provider must be "mtn" or "orange"' });
+    }
+
+    // Validate and format phone number
+    let phoneDigits = phone.replace(/\D/g, '');
+    if (phoneDigits.length < 9) {
+      return res.status(400).json({ error: 'Invalid phone number format - need at least 9 digits' });
+    }
+
+    // Remove country code if present and keep last 9 digits
+    if (phoneDigits.length > 9) {
+      phoneDigits = phoneDigits.slice(-9);
+    }
+
+    // Format: +237XXXXXXXXX (Cameroon country code)
+    const formattedPhone = '+237' + phoneDigits;
+
+    const payload = {
+      amount: Number(amount_cents),
+      phone: formattedPhone,
+      userId: registration_id,
+      externalId: registration_id,
+      redirectUrl: `https://www.ubatechcamp.org/registration-complete`,
+      message: `UBA Tech Camp Registration Fee`
+    };
+
+    console.log(`[PAYMENT] Initiating ${provider.toUpperCase()} payment:`, {
+      registration_id,
+      phone: formattedPhone,
+      amount_cents: payload.amount,
+      provider
+    });
+
+    // Call FAPSHI to initiate mobile money payment
+    const data = await fapshi.initiatePay(payload);
+
+    console.log(`[PAYMENT] FAPSHI Response:`, data);
+
+    const paymentId = data.transId || (Math.random().toString(36).slice(2, 10));
+    
+    // Store payment record
+    payments.set(paymentId, {
+      registration_id,
+      provider,
+      phone: formattedPhone,
+      amount: payload.amount,
+      status: 'pending',
+      dateInitiated: new Date().toISOString()
+    });
+
+    // Persist to Supabase
+    try {
+      if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY !== 'your_service_role_key_here') {
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(registration_id);
+        
+        const { error } = await supabase.from('payments').insert([{ 
+          registration_id: isUuid ? registration_id : null,
+          phone: formattedPhone || null,
+          amount_cents: payload.amount,
+          currency: currency || 'XAF',
+          provider: provider,
+          status: 'pending',
+          provider_reference: paymentId,
+          message: payload.message
+        }]);
+
+        if (error) {
+          console.error('[PAYMENT] Supabase Insert Error:', error.message);
+        }
+      }
+    } catch (dbErr) {
+      console.warn('Supabase DB error (non-critical):', dbErr.message || dbErr);
+    }
+
+    // Return payment ID for polling, not a redirect URL
+    return res.json({ 
+      id: paymentId,
+      payment_id: paymentId,
+      status: 'pending',
+      message: `Please complete payment on your ${provider.toUpperCase()} phone. A prompt will appear shortly.`
+    });
+  } catch (err) {
+    const errorData = err.response?.data || { message: err.message };
+    console.error('[PAYMENT] Mobile payment error:', errorData);
+    const code = err.response?.status || 500;
+    const msg = errorData.message || 'Failed to initiate mobile payment';
+    return res.status(code).json({ error: msg, details: errorData });
+  }
+});
+
 app.post('/api/payments/fapshi', async (req, res) => {
   try {
     const { registration_id, amount_cents, currency, phone, email } = req.body;
