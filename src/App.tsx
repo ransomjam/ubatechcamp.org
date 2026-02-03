@@ -18,6 +18,8 @@ import SuperAdmin from "./pages/SuperAdmin";
 import LearnOnlineAuth from "./pages/LearnOnlineAuth";
 import LearnOnlinePayment from "./pages/LearnOnlinePayment";
 import LearnOnlineSuccess from "./pages/LearnOnlineSuccess";
+import ManualReceipt from "./pages/ManualReceipt";
+import ClaimReceipt from "./pages/ClaimReceipt";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,6 +47,8 @@ const App = () => (
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/super" element={<SuperAdmin />} />
+          <Route path="/receipt" element={<ManualReceipt />} />
+          <Route path="/receipt/claim/:token" element={<ClaimReceipt />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

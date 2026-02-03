@@ -4,7 +4,8 @@ import logo from '@/assets/uba-tech-camp-logo-new.png';
 
 interface InvoiceData {
   fullName: string;
-  email: string;
+  email?: string;
+  institution?: string;
   program: string;
   amount: number;
   transId: string;
@@ -85,8 +86,17 @@ export const generateInvoice = (data: InvoiceData) => {
   
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  doc.text(data.email, 20, 82);
-  doc.text('Student / Participant', 20, 87);
+  
+  let billY = 82;
+  if (data.email) {
+    doc.text(data.email, 20, billY);
+    billY += 5;
+  }
+  doc.text('Student / Participant', 20, billY);
+  if (data.institution) {
+    billY += 5;
+    doc.text(data.institution, 20, billY);
+  }
 
   // Organization Info
   doc.setFontSize(9);
