@@ -20,6 +20,7 @@ import LearnOnlinePayment from "./pages/LearnOnlinePayment";
 import LearnOnlineSuccess from "./pages/LearnOnlineSuccess";
 import ManualReceipt from "./pages/ManualReceipt";
 import ClaimReceipt from "./pages/ClaimReceipt";
+import Accounting from "./pages/Accounting";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -49,6 +50,7 @@ const App = () => (
           <Route path="/admin/super" element={<SuperAdmin />} />
           <Route path="/receipt" element={<ManualReceipt />} />
           <Route path="/receipt/claim/:token" element={<ClaimReceipt />} />
+          <Route path="/accounting" element={<Accounting />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
